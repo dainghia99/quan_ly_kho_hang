@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using MongoDB.EntityFrameworkCore.Extensions;
 
 namespace quan_ly_kho_hang.Models
 {
@@ -17,6 +19,8 @@ namespace quan_ly_kho_hang.Models
             
 
         }
+
+
 
 
     }

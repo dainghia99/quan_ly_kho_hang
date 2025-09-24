@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
+using quan_ly_kho_hang.Models;
 
 namespace App.Areas.Identity.Models.RoleViewModels
 {
@@ -12,7 +13,7 @@ namespace App.Areas.Identity.Models.RoleViewModels
         public string Name { get; set; }
         public List<IdentityRoleClaim<string>> Claims { get; set; }
 
-        public IdentityRole role { get; set; }
+        public AppRole role { get; set; }
 
 
 

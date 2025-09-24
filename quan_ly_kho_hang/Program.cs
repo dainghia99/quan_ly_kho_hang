@@ -27,6 +27,17 @@ builder.Services.AddDbContext<AppDbContext>((sp, options) =>
     options.UseMongoDB(client, mongoDatabase);
 });
 
+// Tích Identity với MongoDB
+builder.Services
+    .AddIdentity<AppUser, AppRole>(options =>
+    {
+        options.Password.RequireDigit = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequiredLength = 6;
+    })
+    .AddMongoDbStores<AppUser, AppRole, Guid>(
+        mongoConnection, mongoDatabase)
+    .AddDefaultTokenProviders();
 
 // Truy cập IdentityOptions
 builder.Services.Configure<IdentityOptions>(options => {

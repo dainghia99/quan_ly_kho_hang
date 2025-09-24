@@ -4,6 +4,7 @@ using App.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using quan_ly_kho_hang.Models;
 
 namespace App.Areas.Identity.Models.UserViewModels
 {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using App.Models;
+using quan_ly_kho_hang.Models;
 
 namespace App.Areas.Identity.Models.UserViewModels
 {

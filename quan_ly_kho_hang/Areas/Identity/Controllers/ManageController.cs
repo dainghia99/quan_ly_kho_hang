@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using quan_ly_kho_hang.Models;
 
 namespace App.Areas.Identity.Controllers
 {
@@ -62,8 +63,6 @@ namespace App.Areas.Identity.Controllers
                 AuthenticatorKey = await _userManager.GetAuthenticatorKeyAsync(user),
                 profile = new EditExtraProfileModel()
                 {
-                    BirthDate = user.BirthDate,
-                    HomeAdress = user.HomeAdress,
                     UserName = user.UserName,
                     UserEmail = user.Email,
                     PhoneNumber = user.PhoneNumber,
@@ -377,8 +376,7 @@ namespace App.Areas.Identity.Controllers
             
             var model = new EditExtraProfileModel()
             {
-                BirthDate = user.BirthDate,
-                HomeAdress = user.HomeAdress,
+                
                 UserName = user.UserName,
                 UserEmail = user.Email,
                 PhoneNumber = user.PhoneNumber,
@@ -390,8 +388,6 @@ namespace App.Areas.Identity.Controllers
         {
             var user = await GetCurrentUserAsync();
 
-            user.HomeAdress = model.HomeAdress;
-            user.BirthDate = model.BirthDate;
             await _userManager.UpdateAsync(user);
 
             await _signInManager.RefreshSignInAsync(user);

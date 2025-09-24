@@ -7,10 +7,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using quan_ly_kho_hang.Models;
 
 namespace App.Areas.Identity.Models.RoleViewModels
 {
-    public class RoleModel : IdentityRole
+    public class RoleModel : AppRole
     {
         public string[] Claims { get; set; }
 
