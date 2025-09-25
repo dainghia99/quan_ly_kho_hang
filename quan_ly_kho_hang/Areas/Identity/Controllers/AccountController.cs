@@ -149,9 +149,9 @@ namespace App.Areas.Identity.Controllers
                                   code = code},
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(model.Email, 
+                    var message = await _emailSender.SendGmailAsync(model.Email,
                         "Xác nhận địa chỉ email",
-                        @$"Bạn đã đăng ký tài khoản trên RazorWeb, 
+                        @$"Bạn đã đăng ký tài khoản trên ứng dụng web của chúng tôi, 
                            hãy <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>bấm vào đây</a> 
                            để kích hoạt tài khoản.");
 
@@ -407,7 +407,7 @@ namespace App.Areas.Identity.Controllers
                     protocol: Request.Scheme);
 
 
-                await _emailSender.SendEmailAsync(
+                await _emailSender.SendGmailAsync(
                     model.Email,
                     "Reset Password",
                     $"Hãy bấm <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>vào đây</a> để đặt lại mật khẩu.");
@@ -522,7 +522,7 @@ namespace App.Areas.Identity.Controllers
             var message = "Your security code is: " + code;
             if (model.SelectedProvider == "Email")
             {
-                await _emailSender.SendEmailAsync(await _userManager.GetEmailAsync(user), "Security Code", message);
+                await _emailSender.SendGmailAsync(await _userManager.GetEmailAsync(user), "Security Code", message);
             }
             else if (model.SelectedProvider == "Phone")
             {

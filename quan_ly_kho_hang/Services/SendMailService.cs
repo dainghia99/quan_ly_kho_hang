@@ -19,6 +19,7 @@ public interface IEmailSender
 {
     Task SendEmailAsync(string email, string subject, string message);
     Task SendSmsAsync(string number, string message);
+    Task<string> SendGmailAsync(string email, string subject, string message);
 }
 
 public class SendMailService : IEmailSender {
@@ -76,12 +77,45 @@ public class SendMailService : IEmailSender {
 
     }
 
-        public Task SendSmsAsync(string number, string message)
+    // Dịch vụ gửi Email của google
+    public async Task<string> SendGmailAsync(string email, string subject, string htmlBody)
+    {
+        var message = new MimeMessage();
+        message.Sender = new MailboxAddress(mailSettings.DisplayName, mailSettings.Mail);
+        message.From.Add(new MailboxAddress(mailSettings.DisplayName, mailSettings.Mail));
+        message.To.Add(MailboxAddress.Parse(email));
+        message.Subject = subject;
+
+        var builder = new BodyBuilder();
+        builder.HtmlBody = htmlBody;
+        message.Body = builder.ToMessageBody();
+
+        using var smtp = new MailKit.Net.Smtp.SmtpClient();
+
+        try
         {
-            // Cài đặt dịch vụ gửi SMS tại đây
-            System.IO.Directory.CreateDirectory("smssave");
-            var emailsavefile = string.Format(@"smssave/{0}-{1}.txt",number, Guid.NewGuid());
-            System.IO.File.WriteAllTextAsync(emailsavefile, message);
-            return Task.FromResult(0);
+            await smtp.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+            await smtp.AuthenticateAsync(mailSettings.Mail, mailSettings.Password);
+            await smtp.SendAsync(message);
+            await smtp.DisconnectAsync(true);
+            logger.LogInformation($"Sent Gmail to {email}");
+            return "Đã gửi email xác nhận đến " + email;
         }
+        catch (Exception ex)
+        {
+            logger.LogError($"Lỗi gửi email: {ex.Message}");
+            return $"Lỗi gửi email: {ex.Message}";
+        }
+    }
+
+    public Task SendSmsAsync(string number, string message)
+    {
+        // Cài đặt dịch vụ gửi SMS tại đây
+        System.IO.Directory.CreateDirectory("smssave");
+        var emailsavefile = string.Format(@"smssave/{0}-{1}.txt",number, Guid.NewGuid());
+        System.IO.File.WriteAllTextAsync(emailsavefile, message);
+        return Task.FromResult(0);
+    }
+
+
 }

@@ -1,8 +1,10 @@
 ﻿using App.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
+using quan_ly_kho_hang.Menu;
 using quan_ly_kho_hang.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -91,7 +93,12 @@ builder.Services.AddAuthentication()
         // .AddMicrosoftAccount()
         ;
 
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+builder.Services.AddTransient<AdminSidebarService>();
 builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
+
 
 
 

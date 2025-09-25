@@ -37,7 +37,8 @@ namespace App.Areas.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var rolesList = await _roleManager.Roles.OrderBy(r => r.Name).ToListAsync();
+            var rolesList = await Task.Run(() => _roleManager.Roles.OrderBy(r => r.Name).ToList());
+
             var roles = new List<RoleModel>();
 
             foreach (var role in rolesList)
@@ -146,7 +147,7 @@ namespace App.Areas.Identity.Controllers
             var role = await _roleManager.FindByIdAsync(roleid);
             if (role == null) return NotFound("Không tìm thấy role");
 
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) 
                 return View(model);
 
             role.Name = model.Name;
