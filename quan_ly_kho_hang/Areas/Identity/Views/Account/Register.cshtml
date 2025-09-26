@@ -1,0 +1,178 @@
+﻿@using quan_ly_kho_hang.Models
+@inject SignInManager<AppUser> SignInManager
+
+@model RegisterViewModel
+
+@{
+    Layout = "_LayoutLogin";
+}
+
+<section class="signin-section">
+    <div class="container-fluid">
+        <div class="row g-0 auth-row">
+        <div class="col-lg-6">
+            <div class="auth-cover-wrapper bg-primary-100">
+            <div class="auth-cover">
+                <div class="title text-center">
+                <h1 class="text-primary mb-10">Đăng Ký Tài Khoản</h1>
+                <p class="text-medium">
+                    Bắt đầu tạo ra trải nghiệm người dùng tốt nhất có thể
+                    <br class="d-sm-block" />
+                    Bắt đầu ngay.
+                </p>
+                </div>
+                <div class="cover-image">
+                <img src="~/assets/images/auth/signin-image.svg" alt="" />
+                </div>
+                <div class="shape-image">
+                <img src="~/assets/images/auth/shape.svg" alt="" />
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- end col -->
+        <div class="col-lg-6">
+            <div class="signup-wrapper">
+            <div class="form-wrapper">
+                <h6 class="mb-15">Đăng Ký Tài Khoản Của Bạn Để Chúng Tôi Phê Duyệt</h6>
+                <p class="text-sm mb-25">
+                Bắt đầu tạo tài khoản
+                </p>
+                <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                <div class="row">
+                    <div class="col-12">
+                    <div class="input-style-1">
+                        <label>Tên tài khoản</label>
+                        <input asp-for="UserName" type="text" placeholder="Tên tài khoản" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+
+                    </div>
+                    <!-- end col -->
+                    <div class="col-12">
+                    <div class="input-style-1">
+                        <label>Địa chỉ Email</label>
+                        <input input asp-for="Email" type="email" placeholder="example@gmail.com" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    </div>
+
+                    <!-- end col -->
+                    <div class="col-12">
+                    <div class="input-style-1">
+                        <label>Mật Khẩu</label>
+                        <input asp-for="Password" type="password" placeholder="********" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    </div>
+
+                    <div class="col-12">
+                    <div class="input-style-1">
+                        <label>Nhập Lại Mật Khẩu</label>
+                        <input asp-for="ConfirmPassword" type="password" placeholder="********" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    </div>
+                    <!-- end col -->
+                    <div class="col-12">
+                    <div
+                        class="
+                        button-group
+                        d-flex
+                        justify-content-center
+                        flex-wrap
+                        "
+                    >
+                        <button
+                        type="submit"
+                        class="
+                            main-btn
+                            primary-btn
+                            btn-hover
+                            w-100
+                            text-center
+                        "
+                        >
+                        Đăng Ký
+                        </button>
+                    </div>
+                    </div>
+                </div>
+                <!-- end row -->
+                </form>
+                <div class="singup-option pt-40">
+                <p class="text-sm text-medium text-center text-gray">
+                    Đăng ký nhanh chóng
+                </p>
+                <div
+                    class="
+                    button-group
+                    pt-40
+                    pb-40
+                    d-flex
+                    justify-content-center
+                    flex-wrap
+                    "
+                >
+                   
+                    
+                    @{
+                    var schemes = await SignInManager.GetExternalAuthenticationSchemesAsync();
+                    var loginProviders = schemes.ToList();
+                    if (loginProviders.Count == 0)
+                    {
+                        
+                    }
+                    else
+                    {
+                        <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+                            <div>
+                                <p>
+                                    @foreach (var provider in loginProviders)
+                                    {
+   
+                              
+                                        if (provider.Name == "Google")
+                                        {
+                                            <button type="submit" value="@provider.Name" 
+                                            title="Log in using your @provider.Name account"
+                                            class="main-btn danger-btn-outline m-2">
+                                                <i class="lni lni-google mr-10"></i>
+                                                @provider.Name
+                                            </button>
+                                        }
+                                        else if (provider.Name == "Facebook")
+                                        {
+                                            
+                                           <button type="submit" value="@provider.Name" 
+                                            title="Log in using your @provider.Name account"
+                                            class="main-btn primary-btn-outline m-2">
+                                                <i class="lni lni-facebook-filled mr-10"></i>
+                                                 @provider.Name
+                                            </button>
+                                        }
+                                   
+
+                                        
+                                    }
+                                </p>
+                            </div>
+                        </form>
+                    }
+                 }
+                </div>
+                <p class="text-sm text-medium text-dark text-center">
+                    Bạn đã có tài khoản? <a asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]">Đăng nhập ngay</a>
+                </p>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- end col -->
+        </div>
+        <!-- end row -->
+    </div>
+</section>
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
