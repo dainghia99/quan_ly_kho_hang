@@ -1,15 +1,9 @@
 ﻿using App.Data;
-using App.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using quan_ly_kho_hang.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace quan_ly_kho_hang.Areas.Database.Controllers
 {

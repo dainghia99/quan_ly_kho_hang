@@ -7,86 +7,231 @@
 
 @{
     ViewData["Title"] = "Đăng nhập";
+    Layout = "_LayoutLogin";
 }
 
-<h1>@ViewData["Title"].</h1>
-<div class="row">
-    <div class="col-md-8">
-        <section>
-            <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
-                <h4>Sử dụng tài khoản đã đăng ký để đăng nhập</h4>
-                <hr />
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="UserNameOrEmail" class="control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="UserNameOrEmail" class="form-control" />
+ <section class="signin-section">
+    <div class="container-fluid">
+        <div class="row g-0 auth-row">
+        <div class="col-lg-6">
+            <div class="auth-cover-wrapper bg-primary-100">
+            <div class="auth-cover">
+                <div class="title text-center">
+                <h1 class="text-primary mb-10">Chào mừng bạn trở lại</h1>
+                <p class="text-medium">
+                    Đăng nhập vào tài khoản hiện tại của bạn để tiếp tục
+                </p>
+                </div>
+                <div class="cover-image">
+                <img src="~/assets/images/auth/signin-image.svg" alt="" />
+                </div>
+                <div class="shape-image">
+                <img src="~/assets/images/auth/shape.svg" alt="" />
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- end col -->
+        <div class="col-lg-6">
+            <div class="signin-wrapper">
+            <div class="form-wrapper">
+                <h6 class="mb-15">Đăng nhập</h6>
+                <p class="text-sm mb-25">
+                Bắt đầu tạo ra trải nghiệm người dùng tốt nhất cho bạn.
+                </p>
+                <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row">
+                    <div class="col-12">
+                    <div class="input-style-1">
+                        <label>Địa chỉ Email</label>
+                        <input asp-for="UserNameOrEmail" type="email" placeholder="example@gmail.com" />
                         <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Password" class="control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="Password" class="form-control" />
+
+                    </div>
+                    <!-- end col -->
+                    <div class="col-12">
+                    <div class="input-style-1">
+                        <label>Mật khẩu</label>
+                        <input <input asp-for="Password" type="password" placeholder="*********" />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <div class="checkbox">
-                            <label asp-for="RememberMe">
-                                <input asp-for="RememberMe" />
-                                @Html.DisplayNameFor(m => m.RememberMe)
-                            </label>
-                        </div>
+                    </div>
+
+
+                    <!-- end col -->
+                    <div class="col-xxl-6 col-lg-12 col-md-6">
+                    <div class="form-check checkbox-style mb-30">
+                        <input
+                        asp-for="RememberMe"
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="checkbox-remember"
+                        />
+                        <label
+                        class="form-check-label"
+                        for="checkbox-remember"
+                        >
+                        Ghi nhớ đăng nhập
+                        </label>
+                    </div>
+                    </div>
+
+                    <!-- end col -->
+                    <div class="col-xxl-6 col-lg-12 col-md-6">
+                    <div
+                        class="
+                        text-start text-md-end text-lg-start text-xxl-end
+                        mb-30
+                        "
+                    >
+                        <a asp-action="ForgotPassword">Quên mật khẩu?</a>
+                    </div>
+                    </div>
+                    <!-- end col -->
+                    <div class="col-12">
+                    <div
+                        class="
+                        button-group
+                        d-flex
+                        justify-content-center
+                        flex-wrap
+                        "
+                    >
+                        <button
+                        type="submit"
+                        class="
+                            main-btn
+                            primary-btn
+                            btn-hover
+                            w-100
+                            text-center
+                        "
+                        >
+                        Đăng nhập
+                        </button>
+                    </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-primary">Đăng nhập</button>
-                    </div>
-                </div>
-                <p>
-                    <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Chưa có tài khoản? Đăng ký</a>
+                <!-- end row -->
+                </form>
+                <div class="singin-option pt-40">
+                <p class="text-sm text-medium text-center text-gray">
+                    Đăng nhập đơn giản với 
                 </p>
-                <p>
-                    <a asp-action="ForgotPassword">Quyên mật khẩu?</a>
+                <div
+                    class="
+                    button-group
+                    pt-40
+                    pb-40
+                    d-flex
+                    justify-content-center
+                    flex-wrap
+                    "
+                >
+                    
+                @{
+                    var schemes = await SignInManager.GetExternalAuthenticationSchemesAsync();
+                    var loginProviders = schemes.ToList();
+                    if (loginProviders.Count == 0)
+                    {
+                        
+                    }
+                    else
+                    {
+                        <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+                            <div>
+                                <p>
+                                    @foreach (var provider in loginProviders)
+                                    {
+   
+                              
+                                        if (provider.Name == "Google")
+                                        {
+                                            <button type="submit" value="@provider.Name" 
+                                            title="Log in using your @provider.Name account"
+                                            class="main-btn danger-btn-outline m-2">
+                                                <i class="lni lni-google mr-10"></i>
+                                                @provider.Name
+                                            </button>
+                                        }
+                                        else if (provider.Name == "Facebook")
+                                        {
+                                            
+                                           <button type="submit" value="@provider.Name" 
+                                            title="Log in using your @provider.Name account"
+                                            class="main-btn primary-btn-outline m-2">
+                                                <i class="lni lni-facebook-filled mr-10"></i>
+                                                 @provider.Name
+                                            </button>
+                                        }
+                                   
+
+                                        
+                                    }
+                                </p>
+                            </div>
+                        </form>
+                    }
+                 }
+                </div>
+                <p class="text-sm text-medium text-dark text-center">
+                    Bạn chưa có tài khoản?
+                    <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Đăng ký ngay</a>
                 </p>
-            </form>
-        </section>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- end col -->
+        </div>
+        <!-- end row -->
     </div>
-    <div class="col-md-4">
-        <section>
-            <h4>Đăng nhập bằng tài khoản.</h4>
-            <hr />
-            @{
-                var schemes = await SignInManager.GetExternalAuthenticationSchemesAsync();
-                var loginProviders = schemes.ToList();
-                if (loginProviders.Count == 0)
-                {
-                    <div>
-                        <p>
-                            Ứng dụng chưa hỗ trợ đăng nhập từ tài khoản ngoài
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
-                        <div>
-                            <p>
-                                @foreach (var provider in loginProviders)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.Name account">@provider.Name</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
-        </section>
+    </section>
+    <!-- ========== signin-section end ========== -->
+
+    <!-- ========== footer start =========== -->
+    <footer class="footer">
+    <div class="container-fluid">
+        <div class="row">
+        <div class="col-md-6 order-last order-md-first">
+            <div class="copyright text-center text-md-start">
+            @*  <p class="text-sm">
+                Chào mừng bạn đến với website của chúng tôi
+                <a
+                href="/"
+                rel="nofollow"
+                target="_blank"
+                >
+                Quản lý kho hàng
+                </a>
+            </p> *@
+            </div>
+        </div>
+        <!-- end col-->
+        <div class="col-md-6">
+            <div
+            class="
+                terms
+                d-flex
+                justify-content-center justify-content-md-end
+            "
+            >
+            <!-- <a href="#0" class="text-sm">Term & Conditions</a>
+            <a href="#0" class="text-sm ml-15">Privacy & Policy</a> -->
+            </div>
+        </div>
+        </div>
+        <!-- end row -->
     </div>
-</div>
+    <!-- end container -->
+    </footer>
+    <!-- ========== footer end =========== -->
+
+
+@* end *@
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
