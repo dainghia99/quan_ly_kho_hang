@@ -4,27 +4,69 @@
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
 
+<style>
+    .reset-btn {
+        all: unset !important;
+        cursor: inherit !important;
+        display: inline !important;
+        font: inherit !important;
+        color: inherit !important;
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        height: 100% !important; 
+        
+    }
+</style>
+
 @if (SignInManager.IsSignedIn(User))
 {
     <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
-        <ul class="nav navbar-nav navbar-right">
-            <li class="nav-item">
-                <a class="nav-link" asp-area="Identity"  asp-controller="Manage" asp-action="Index" title="Manage">Xin chào @UserManager.GetUserName(User)!</a>
+        <div class="profile-box ml-15">
+            <button
+            class="dropdown-toggle bg-transparent border-0"
+            type="button"
+            id="profile"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            >
+            <div class="profile-info">
+                <div class="info">
+                <!-- <h6>John Doe</h6> -->
+                <div class="image">
+                    <img
+                    src="~/assets/images/profile/user-avatar.png"
+                    alt=""
+                    />
+                    <span class="status"></span>
+                </div>
+                </div>
+            </div>
+            <i class="lni lni-chevron-down"></i>
+            </button>
+            <ul
+            class="dropdown-menu dropdown-menu-end"
+            aria-labelledby="profile"
+            >
+            <li>
+                <a asp-area="Identity"  asp-controller="Manage" asp-action="Index">
+                <i class="lni lni-user"></i> Tài khoản
+                </a>
+            <li>
+                <a href=""> <i class="lni lni-exit"></i>
+                    <button class="reset-btn" type="submit">Đăng xuất</button>
+                </a>
             </li>
-            <li class="nav-item">
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Đăng xuất</button>
-            </li>
-        </ul>
+            </ul>
+        </div>
     </form>
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li class="nav-item">
-            <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng ký</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng nhập</a>
-        </li>
-    </ul>
+    <div class="d-flex align-items-center">
+        <a class="main-btn dark-btn-outline me-2 rounded-full btn-hover" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng ký</a>
+        <a class="main-btn dark-btn-outline rounded-full btn-hover" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng nhập</a>
+    </div>
 }
