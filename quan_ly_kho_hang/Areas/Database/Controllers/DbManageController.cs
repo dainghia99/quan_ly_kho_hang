@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using quan_ly_kho_hang.Data;
 using quan_ly_kho_hang.Models;
 
 
@@ -41,18 +42,18 @@ namespace quan_ly_kho_hang.Areas.Database.Controllers
         [TempData]
         public string StatusMessage { get; set; }
 
-        [HttpPost]
-        [Authorize(Roles = RoleName.Administrator)]
-        public async Task<IActionResult> DeleteDbAsync()
-        {
+        //[HttpPost]
+        //[Authorize(Roles = RoleName.Administrator)]
+        //public async Task<IActionResult> DeleteDbAsync()
+        //{
 
 
-            var success = await _dbContext.Database.EnsureDeletedAsync();
+        //    var success = await _dbContext.Database.EnsureDeletedAsync();
 
-            StatusMessage = success ? "Xóa Database thành công" : "Không xóa được Db";
+        //    StatusMessage = success ? "Xóa Database thành công" : "Không xóa được Db";
 
-            return RedirectToAction(nameof(Index));
-        }
+        //    return RedirectToAction(nameof(Index));
+        //}
 
 
 

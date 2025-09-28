@@ -58,7 +58,7 @@
             </a>
             <ul id="ddmenu_1" class="collapse show dropdown-nav">
               <li>
-                <a href="index.html" class="@(pathOnly == "/" ? "active" : "")"> Tổng quan </a>
+                <a asp-action="Index" asp-controller="Home" asp-area="" class="@(pathOnly == "/" ? "active" : "")"> Tổng quan </a>
               </li>
             </ul>
           </li>
@@ -95,7 +95,7 @@
                 </a>
                 <ul id="ddmenu_3" class="collapse dropdown-nav">
                   <li>
-                    <a class="@(pathOnly == "/ManageUser/Index" ? "active" : "hahah")" asp-action="Index" asp-controller="User" asp-area="Identity"> Quản lý tài khoản </a>
+                    <a class="@(pathOnly == "/ManageUser/Index" ? "active" : "")" asp-action="Index" asp-controller="User" asp-area="Identity"> Quản lý tài khoản </a>
                   </li>
                    <li>
                     <a class="@(pathOnly == "/Role/Index" ? "active" : "")" asp-action="Index" asp-controller="Role" asp-area="Identity"> Quản Lý Role </a>
@@ -103,7 +103,40 @@
                 </ul>
              </li>
         }
-          
+                    <li class="nav-item nav-item-has-children">
+            <a
+              href="#0"
+              class="collapsed"
+              data-bs-toggle="collapse"
+              data-bs-target="#ddmenu_4"
+              aria-controls="ddmenu_4"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="icon">
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 22 22"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3.66675 4.58325V16.4999H19.2501V4.58325H3.66675ZM5.50008 14.6666V6.41659H8.25008V14.6666H5.50008ZM10.0834 14.6666V11.4583H12.8334V14.6666H10.0834ZM17.4167 14.6666H14.6667V11.4583H17.4167V14.6666ZM10.0834 9.62492V6.41659H17.4167V9.62492H10.0834Z"
+                  />
+                </svg>
+              </span>
+              <span class="text">Quản lý sản phẩm </span>
+            </a>
+            <ul id="ddmenu_4" class="collapse dropdown-nav">
+              <li>
+                <a class="@(pathOnly == "/product/index" ? "active" : "")" asp-action="Index" asp-controller="Products" asp-area="Products"> Danh sách sản phẩm </a>
+              </li>
+              <li>
+                <a class="@(pathOnly == "/product/create" ? "active" : "")" asp-action="Create" asp-controller="Products" asp-area="Products"> Thêm sản phẩm </a>
+              </li>
+            </ul>
+          </li>
         </ul>
       </nav>
     </aside>
@@ -186,44 +219,7 @@
         <!-- end container -->
       </section>
       <!-- ========== section end ========== -->
-
-      <!-- ========== footer start =========== -->
-      <footer class="footer">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-6 order-last order-md-first">
-              <div class="copyright text-center text-md-start">
-                <p class="text-sm">
-                  Designed and Developed by
-                  <a
-                    href="https://plainadmin.com"
-                    rel="nofollow"
-                    target="_blank"
-                  >
-                    PlainAdmin
-                  </a>
-                </p>
-              </div>
-            </div>
-            <!-- end col-->
-            <div class="col-md-6">
-              <div
-                class="
-                  terms
-                  d-flex
-                  justify-content-center justify-content-md-end
-                "
-              >
-                <a href="#0" class="text-sm">Term & Conditions</a>
-                <a href="#0" class="text-sm ml-15">Privacy & Policy</a>
-              </div>
-            </div>
-          </div>
-          <!-- end row -->
-        </div>
-        <!-- end container -->
-      </footer>
-      <!-- ========== footer end =========== -->
+      
     </main>
     <!-- ======== main-wrapper end =========== -->
 
