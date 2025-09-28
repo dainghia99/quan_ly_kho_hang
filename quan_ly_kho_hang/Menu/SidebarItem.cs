@@ -45,13 +45,11 @@ namespace quan_ly_kho_hang.Menu
 
             if (Type == SidebarItemType.Divider)
             {
-                html.Append("<hr class=\"sidebar-divider my-2\">");
+                html.Append("");
             }
             else if (Type == SidebarItemType.Heading)
             {
-                html.Append(@$"<div class=""sidebar-heading"">
-                                {Title}
-                               </div>");
+                html.Append(@$"<span class=""text"">{Title}</span>");
             }
             else if (Type == SidebarItemType.NavItem)
             {

@@ -24,4 +24,9 @@
     <PackageReference Include="MongoDB.EntityFrameworkCore" Version="8.3.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\jquery-validation\" />
+    <Folder Include="wwwroot\lib\jquery-validation-unobtrusive\" />
+  </ItemGroup>
+
 </Project>

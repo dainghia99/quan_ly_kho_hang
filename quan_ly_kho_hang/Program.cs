@@ -1,4 +1,5 @@
-﻿using App.Services;
+﻿using App.Data;
+using App.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -93,6 +94,14 @@ builder.Services.AddAuthentication()
         // .AddMicrosoftAccount()
         ;
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ViewManageMenu", builder =>
+    {
+        builder.RequireAuthenticatedUser();
+        builder.RequireRole(RoleName.Administrator);
+    });
+});
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
