@@ -1,27 +1,24 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using MongoDB.EntityFrameworkCore.Extensions;
+﻿using MongoDB.Driver;
+using quan_ly_kho_hang.Models;
+using Microsoft.Extensions.Configuration;
 
-namespace quan_ly_kho_hang.Models
+namespace quan_ly_kho_hang.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext
     {
-        
+        private readonly IMongoDatabase _database;
 
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        public AppDbContext(IConfiguration configuration)
         {
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
             
+            var connectionString = configuration.GetConnectionString("MongoDb");
+            var dbName = configuration.GetConnectionString("DatabaseName");
 
+            var client = new MongoClient(connectionString);
+            _database = client.GetDatabase(dbName);
         }
 
-
-
-
+        // ✅ Tạo collection Product
+        public IMongoCollection<Product> Products => _database.GetCollection<Product>("Products");
     }
 }

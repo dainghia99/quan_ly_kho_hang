@@ -1,17 +1,20 @@
-﻿using App.Services;
+﻿using App.Data;
+using App.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
+using quan_ly_kho_hang.Data;
 using quan_ly_kho_hang.Menu;
 using quan_ly_kho_hang.Models;
+using quan_ly_kho_hang.Repositories;
+using quan_ly_kho_hang.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Cấu hình Mail
 builder.Services.AddOptions();
 var mailsetting = builder.Configuration.GetSection("MailSettings");
 builder.Services.Configure<MailSettings>(mailsetting);
@@ -21,15 +24,16 @@ builder.Services.AddSingleton<IEmailSender, SendMailService>();
 var mongoConnection = builder.Configuration.GetConnectionString("MongoDb");
 var mongoDatabase = builder.Configuration.GetConnectionString("DatabaseName");
 
-// Đăng ký MongoClient và DbContext
-builder.Services.AddSingleton<MongoClient>(sp => new MongoClient(mongoConnection));
-builder.Services.AddDbContext<AppDbContext>((sp, options) =>
+// Đăng ký MongoClient và DataContext
+builder.Services.AddSingleton<IMongoClient>(sp => new MongoClient(mongoConnection));
+builder.Services.AddSingleton(sp =>
 {
-    var client = sp.GetRequiredService<MongoClient>();
-    options.UseMongoDB(client, mongoDatabase);
+    var client = sp.GetRequiredService<IMongoClient>();
+    return client.GetDatabase(mongoDatabase);
 });
+builder.Services.AddSingleton<AppDbContext>(); // chính là DataContext bạn viết với IMongoCollection
 
-// Tích Identity với MongoDB
+// Identity + MongoDB store (nếu bạn đang dùng AspNetCore.Identity.Mongo)
 builder.Services
     .AddIdentity<AppUser, AppRole>(options =>
     {
@@ -41,74 +45,73 @@ builder.Services
         mongoConnection, mongoDatabase)
     .AddDefaultTokenProviders();
 
-// Truy cập IdentityOptions
+// IdentityOptions
 builder.Services.Configure<IdentityOptions>(options => {
-    // Thiết lập về Password
-    options.Password.RequireDigit = false; // Không bắt phải có số
-    options.Password.RequireLowercase = false; // Không bắt phải có chữ thường
-    options.Password.RequireNonAlphanumeric = false; // Không bắt ký tự đặc biệt
-    options.Password.RequireUppercase = false; // Không bắt buộc chữ in
-    options.Password.RequiredLength = 3; // Số ký tự tối thiểu của password
-    options.Password.RequiredUniqueChars = 1; // Số ký tự riêng biệt
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 3;
+    options.Password.RequiredUniqueChars = 1;
 
-    // Cấu hình Lockout - khóa user
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); // Khóa 5 phút
-    options.Lockout.MaxFailedAccessAttempts = 3; // Thất bại 3 lầ thì khóa
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 3;
     options.Lockout.AllowedForNewUsers = true;
 
-    // Cấu hình về User.
-    options.User.AllowedUserNameCharacters = // các ký tự đặt tên user
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-    options.User.RequireUniqueEmail = true;  // Email là duy nhất
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    options.User.RequireUniqueEmail = true;
 
-
-    // Cấu hình đăng nhập.
-    options.SignIn.RequireConfirmedEmail = true;            // Cấu hình xác thực địa chỉ email (email phải tồn tại)
-    options.SignIn.RequireConfirmedPhoneNumber = false;     // Xác thực số điện thoại
+    options.SignIn.RequireConfirmedEmail = true;
+    options.SignIn.RequireConfirmedPhoneNumber = false;
     options.SignIn.RequireConfirmedAccount = true;
-
 });
 
+// Cookie config
 builder.Services.ConfigureApplicationCookie(options => {
     options.LoginPath = "/login/";
     options.LogoutPath = "/logout/";
     options.AccessDeniedPath = "/khongduoctruycap.html";
 });
 
+// External login
 builder.Services.AddAuthentication()
-        .AddGoogle(options => {
-            var gconfig = builder.Configuration.GetSection("Authentication:Google");
-            options.ClientId = gconfig["ClientId"];
-            options.ClientSecret = gconfig["ClientSecret"];
-            // https://localhost:5001/signin-google
-            options.CallbackPath = "/dang-nhap-tu-google";
-        })
-        .AddFacebook(options => {
-            var fconfig = builder.Configuration.GetSection("Authentication:Facebook");
-            options.AppId = fconfig["AppId"];
-            options.AppSecret = fconfig["AppSecret"];
-            options.CallbackPath = "/dang-nhap-tu-facebook";
-        })
-        // .AddTwitter()
-        // .AddMicrosoftAccount()
-        ;
+    .AddGoogle(options => {
+        var gconfig = builder.Configuration.GetSection("Authentication:Google");
+        options.ClientId = gconfig["ClientId"];
+        options.ClientSecret = gconfig["ClientSecret"];
+        options.CallbackPath = "/dang-nhap-tu-google";
+    })
+    .AddFacebook(options => {
+        var fconfig = builder.Configuration.GetSection("Authentication:Facebook");
+        options.AppId = fconfig["AppId"];
+        options.AppSecret = fconfig["AppSecret"];
+        options.CallbackPath = "/dang-nhap-tu-facebook";
+    });
 
+// Authorization policy
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ViewManageMenu", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole(RoleName.Administrator);
+    });
+});
 
+// Services & helpers
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 builder.Services.AddTransient<AdminSidebarService>();
 builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
-
-
-
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

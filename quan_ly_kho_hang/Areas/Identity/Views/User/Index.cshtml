@@ -3,9 +3,10 @@
 @model UserListModel
 
 @{
-    ViewData["Title"] = "Danh sách các thành viên";
+    ViewData["Title"] = "Danh Sách Các Thành Viên";
+    ViewData["Slug"] = "Auth";
 }
-<h2>@ViewData["Title"]</h2>
+
 <partial name="_StatusMessage"></partial>
 <p>Tổng số thành viên: @Model.totalUsers</p>
 
