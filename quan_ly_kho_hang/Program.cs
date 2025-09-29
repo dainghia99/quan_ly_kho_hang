@@ -31,9 +31,8 @@ builder.Services.AddSingleton(sp =>
     var client = sp.GetRequiredService<IMongoClient>();
     return client.GetDatabase(mongoDatabase);
 });
-builder.Services.AddSingleton<AppDbContext>(); // chính là DataContext bạn viết với IMongoCollection
+builder.Services.AddSingleton<AppDbContext>(); 
 
-// Identity + MongoDB store (nếu bạn đang dùng AspNetCore.Identity.Mongo)
 builder.Services
     .AddIdentity<AppUser, AppRole>(options =>
     {
@@ -98,17 +97,20 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
-// Services & helpers
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 builder.Services.AddTransient<AdminSidebarService>();
 builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IReceiptInRepository, ReceiptInRepository>();
+builder.Services.AddScoped<IReceiptInService, ReceiptInService>();
+
 
 var app = builder.Build();
 
-// Pipeline
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

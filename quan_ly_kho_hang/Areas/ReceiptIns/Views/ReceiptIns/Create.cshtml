@@ -1,0 +1,37 @@
+﻿@model quan_ly_kho_hang.Models.ReceiptIn
+@{
+    var products = ViewBag.Products as List<quan_ly_kho_hang.Models.Product>;
+}
+
+<h2>Tạo Phiếu Nhập</h2>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="mb-3">
+        <label class="form-label">Mã Phiếu</label>
+        <input asp-for="ReceiptNumber" class="form-control" readonly />
+    </div>
+
+    <h4>Danh sách sản phẩm</h4>
+    <div id="items">
+        <div class="item row mb-2">
+            <div class="col-md-6">
+                <select name="Items[0].ProductId" class="form-select">
+                    @foreach (var p in products)
+                    {
+                        <option value="@p.Id">@p.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="number" name="Items[0].Quantity" class="form-control" placeholder="Số lượng" />
+            </div>
+            <div class="col-md-3">
+                <input type="number" step="0.01" name="Items[0].UnitPrice" class="form-control" placeholder="Đơn giá" />
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>

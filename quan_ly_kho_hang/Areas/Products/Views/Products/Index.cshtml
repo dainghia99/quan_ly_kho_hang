@@ -1,19 +1,20 @@
 ﻿@model IEnumerable<quan_ly_kho_hang.Models.Product>
 @{
-    ViewData["Title"] = "Products";
+    ViewData["Title"] = "Quản lý sản phẩm";
+    ViewData["Slug"] = "product";
 }
 
-<h2>Products</h2>
-<a asp-action="Create" class="btn btn-primary mb-3">Add Product</a>
+
+<a asp-action="Create" class="btn btn-primary mb-3">Thêm mới</a>
 
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Image</th>
-            <th>Actions</th>
+            <th>Tên</th>
+            <th>Số lượng</th>
+            <th>Giá trung bình khi nhập kho</th>
+            <th>Hình ảnh</th>
+            <th>Tùy chọn</th>
         </tr>
     </thead>
     <tbody>
@@ -22,7 +23,7 @@
         <tr>
             <td>@item.Name</td>
             <td>@item.Quantity</td>
-            <td>@item.Price.ToString("C")</td>
+            <td>@item.Price</td>
             <td>
                 @if (!string.IsNullOrEmpty(item.ImagePath))
                 {
@@ -30,8 +31,8 @@
                 }
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Chỉnh sửa</a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Xóa</a>
             </td>
         </tr>
     }

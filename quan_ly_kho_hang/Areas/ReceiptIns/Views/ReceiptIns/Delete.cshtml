@@ -1,0 +1,10 @@
+﻿@model quan_ly_kho_hang.Models.ReceiptIn
+
+<h2>Xóa Phiếu Nhập</h2>
+<p>Bạn có chắc muốn xóa phiếu nhập: <b>@Model.ReceiptNumber</b> ?</p>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>
