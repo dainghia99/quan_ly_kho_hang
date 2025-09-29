@@ -104,6 +104,9 @@ builder.Services.AddTransient<AdminSidebarService>();
 builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IReceiptInRepository, ReceiptInRepository>();
+builder.Services.AddScoped<IReceiptInService, ReceiptInService>();
+
 
 var app = builder.Build();
 

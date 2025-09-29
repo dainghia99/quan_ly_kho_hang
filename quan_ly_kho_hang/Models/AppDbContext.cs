@@ -18,7 +18,8 @@ namespace quan_ly_kho_hang.Data
             _database = client.GetDatabase(dbName);
         }
 
-        // ✅ Tạo collection Product
+        
         public IMongoCollection<Product> Products => _database.GetCollection<Product>("Products");
+        public IMongoCollection<ReceiptIn> ReceiptIns => _database.GetCollection<ReceiptIn>("ReceiptIns");
     }
 }

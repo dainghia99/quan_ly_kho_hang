@@ -1,0 +1,28 @@
+﻿@model quan_ly_kho_hang.Models.ReceiptIn
+
+<h2>Chi tiết Phiếu Nhập</h2>
+<p><b>Mã Phiếu:</b> @Model.ReceiptNumber</p>
+<p><b>Ngày Tạo:</b> @Model.CreatedAt.ToLocalTime()</p>
+<p><b>Người Tạo:</b> @Model.CreatedByUserEmail</p>
+
+<h4>Sản phẩm</h4>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ProductId</th>
+            <th>Số lượng</th>
+            <th>Đơn giá</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Items)
+    {
+        <tr>
+            <td>@item.ProductId</td>
+            <td>@item.Quantity</td>
+            <td>@item.UnitPrice</td>
+        </tr>
+    }
+    </tbody>
+</table>
+<a asp-action="Index" class="btn btn-secondary">Quay lại</a>
