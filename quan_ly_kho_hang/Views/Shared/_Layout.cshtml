@@ -137,6 +137,43 @@
               </li>
             </ul>
           </li>
+
+
+          <li class="nav-item nav-item-has-children">
+            <a
+              href="#0"
+              class="collapsed"
+              data-bs-toggle="collapse"
+              data-bs-target="#ddmenu_55"
+              aria-controls="ddmenu_55"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="icon">
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 22 22"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1.83325 19.25V17.4167H18.3333V19.25H1.83325ZM18.3333 7.33333V4.58333H16.4999V7.33333H18.3333ZM18.3333 2.75C18.8195 2.75 19.2858 2.94315 19.6296 3.28697C19.9734 3.63079 20.1666 4.0971 20.1666 4.58333V7.33333C20.1666 7.81956 19.9734 8.28588 19.6296 8.6297C19.2858 8.97351 18.8195 9.16667 18.3333 9.16667H16.4999V11.9167C16.4999 12.8891 16.1136 13.8218 15.426 14.5094C14.7383 15.197 13.8057 15.5833 12.8333 15.5833H7.33325C6.36079 15.5833 5.42816 15.197 4.74053 14.5094C4.05289 13.8218 3.66659 12.8891 3.66659 11.9167V2.75H18.3333ZM14.6666 4.58333H5.49992V11.9167C5.49992 12.4029 5.69307 12.8692 6.03689 13.213C6.38071 13.5568 6.84702 13.75 7.33325 13.75H12.8333C13.3195 13.75 13.7858 13.5568 14.1296 13.213C14.4734 12.8692 14.6666 12.4029 14.6666 11.9167V4.58333Z"
+                  />
+                </svg>
+              </span>
+              <span class="text">Quản lý phiếu </span>
+            </a>
+            <ul id="ddmenu_55" class="collapse dropdown-nav">
+              <li>
+                 <a class="@(pathOnly == "/phieu-nhap/index" ? "active" : "")" asp-action="Index" asp-controller="ReceiptIns" asp-area="ReceiptIns"> Phiếu nhập kho </a>
+              </li>
+              <li>
+                <a class="@(pathOnly == "/phieu-nhap/create" ? "active" : "")" asp-action="Create" asp-controller="ReceiptIns" asp-area="ReceiptIns"> Tạo phiếu  </a>
+              </li>
+            </ul>
+          </li>
+
         </ul>
       </nav>
     </aside>
