@@ -28,7 +28,6 @@ namespace quan_ly_kho_hang.Areas.ReceiptOuts.Controllers
             var receipt = await _receiptOutService.GetByIdAsync(id);
             if (receipt == null) return NotFound();
 
-            // load danh sách product để map tên sản phẩm
             var products = await _productService.GetAllAsync();
             ViewBag.Products = products;
             return View(receipt);
@@ -38,13 +37,22 @@ namespace quan_ly_kho_hang.Areas.ReceiptOuts.Controllers
         {
             var products = await _productService.GetAllAsync();
             ViewBag.Products = products;
-            return View(new ReceiptOut());
+
+            var receipt = new ReceiptOut
+            {
+                CreatedByUserEmail = User.Identity?.Name // email user đang đăng nhập
+            };
+
+            return View(receipt);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ReceiptOut receipt)
         {
+            // override email để tránh bị sửa trên client
+            receipt.CreatedByUserEmail = User.Identity?.Name;
+
             if (ModelState.IsValid)
             {
                 var success = await _receiptOutService.CreateAsync(receipt);
@@ -77,6 +85,12 @@ namespace quan_ly_kho_hang.Areas.ReceiptOuts.Controllers
         {
             if (ModelState.IsValid)
             {
+                // không cho sửa email người tạo, giữ nguyên
+                var oldReceipt = await _receiptOutService.GetByIdAsync(id);
+                if (oldReceipt == null) return NotFound();
+
+                receipt.CreatedByUserEmail = oldReceipt.CreatedByUserEmail;
+
                 await _receiptOutService.UpdateAsync(id, receipt);
                 return RedirectToAction(nameof(Index));
             }

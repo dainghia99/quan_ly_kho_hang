@@ -42,11 +42,6 @@
 
     <button type="button" class="btn btn-secondary mb-3" onclick="addRow()">+ Thêm dòng</button>
 
-    <div class="mb-3">
-        <label class="form-label">Người tạo</label>
-        <input asp-for="CreatedByUserEmail" class="form-control" />
-    </div>
-
     <button type="submit" class="btn btn-success">Lưu</button>
     <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
 </form>
@@ -60,7 +55,10 @@
             row.innerHTML = `
                 <td>
                     <select name="Items[${rowIndex}].ProductId" class="form-select">
-                        ${`@foreach (var p in products) {<option value="@p.Id">@p.Name (@p.Quantity tồn)</option>}` }
+                        @foreach (var p in products)
+                        {
+                            <text><option value="@p.Id">@p.Name (@p.Quantity tồn)</option></text>
+                        }
                     </select>
                 </td>
                 <td><input name="Items[${rowIndex}].Quantity" type="number" class="form-control" /></td>
@@ -70,8 +68,7 @@
             rowIndex++;
         }
         function removeRow(btn) {
-            let row = btn.closest("tr");
-            row.remove();
+            btn.closest("tr").remove();
         }
     </script>
 }

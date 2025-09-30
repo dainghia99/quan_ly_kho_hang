@@ -67,7 +67,8 @@
 
     <div class="mb-3">
         <label class="form-label">Người tạo</label>
-        <input asp-for="CreatedByUserEmail" class="form-control" />
+        <p class="form-control-plaintext">@Model.CreatedByUserEmail</p>
+        <input type="hidden" asp-for="CreatedByUserEmail" />
     </div>
 
     <button type="submit" class="btn btn-success">Cập nhật</button>
