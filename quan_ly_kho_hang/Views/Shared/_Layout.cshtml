@@ -169,7 +169,13 @@
                  <a class="@(pathOnly == "/phieu-nhap/index" ? "active" : "")" asp-action="Index" asp-controller="ReceiptIns" asp-area="ReceiptIns"> Phiếu nhập kho </a>
               </li>
               <li>
-                <a class="@(pathOnly == "/phieu-nhap/create" ? "active" : "")" asp-action="Create" asp-controller="ReceiptIns" asp-area="ReceiptIns"> Tạo phiếu  </a>
+                <a class="@(pathOnly == "/phieu-nhap/create" ? "active" : "")" asp-action="Create" asp-controller="ReceiptIns" asp-area="ReceiptIns"> Tạo phiếu nhập </a>
+              </li>
+              <li>
+                 <a class="@(pathOnly == "/phieu-xuat/index" ? "active" : "")" asp-action="Index" asp-controller="ReceiptOuts" asp-area="ReceiptOuts"> Phiếu xuất kho </a>
+              </li>
+              <li>
+                <a class="@(pathOnly == "/phieu-xuat/create" ? "active" : "")" asp-action="Create" asp-controller="ReceiptOuts" asp-area="ReceiptOuts"> Tạo phiếu xuất </a>
               </li>
             </ul>
           </li>

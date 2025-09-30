@@ -1,0 +1,30 @@
+﻿@model IEnumerable<quan_ly_kho_hang.Models.ReceiptOut>
+
+<h2>Danh sách Phiếu Xuất</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">Tạo Phiếu Xuất</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Mã phiếu</th>
+            <th>Ngày tạo</th>
+            <th>Người tạo</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var receipt in Model)
+        {
+            <tr>
+                <td>@receipt.ReceiptNumber</td>
+                <td>@receipt.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@receipt.CreatedByUserEmail</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@receipt.Id" class="btn btn-sm btn-warning">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@receipt.Id" class="btn btn-sm btn-danger">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

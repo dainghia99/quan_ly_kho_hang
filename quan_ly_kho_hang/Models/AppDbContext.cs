@@ -21,5 +21,7 @@ namespace quan_ly_kho_hang.Data
         
         public IMongoCollection<Product> Products => _database.GetCollection<Product>("Products");
         public IMongoCollection<ReceiptIn> ReceiptIns => _database.GetCollection<ReceiptIn>("ReceiptIns");
+        public IMongoCollection<ReceiptOut> ReceiptOuts => _database.GetCollection<ReceiptOut>("ReceiptOuts");
+
     }
 }

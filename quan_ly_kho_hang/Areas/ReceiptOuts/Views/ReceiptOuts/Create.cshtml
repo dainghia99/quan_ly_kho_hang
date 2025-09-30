@@ -1,0 +1,74 @@
+﻿@model quan_ly_kho_hang.Models.ReceiptOut
+@{
+    var products = ViewBag.Products as List<quan_ly_kho_hang.Models.Product>;
+}
+
+<h2>Tạo Phiếu Xuất</h2>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label class="form-label">Mã Phiếu</label>
+        <input asp-for="ReceiptNumber" class="form-control" readonly />
+    </div>
+
+    <h4>Danh sách sản phẩm xuất</h4>
+    <table class="table" id="itemsTable">
+        <thead>
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <select name="Items[0].ProductId" class="form-select">
+                        @foreach (var p in products)
+                        {
+                            <option value="@p.Id">@p.Name (@p.Quantity tồn)</option>
+                        }
+                    </select>
+                </td>
+                <td><input name="Items[0].Quantity" type="number" class="form-control" /></td>
+                <td><input name="Items[0].UnitPrice" type="number" step="0.01" class="form-control" /></td>
+                <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">X</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-secondary mb-3" onclick="addRow()">+ Thêm dòng</button>
+
+    <button type="submit" class="btn btn-success">Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</form>
+
+@section Scripts {
+    <script>
+        let rowIndex = 1;
+        function addRow() {
+            let table = document.getElementById("itemsTable").getElementsByTagName("tbody")[0];
+            let row = table.insertRow();
+            row.innerHTML = `
+                <td>
+                    <select name="Items[${rowIndex}].ProductId" class="form-select">
+                        @foreach (var p in products)
+                        {
+                            <text><option value="@p.Id">@p.Name (@p.Quantity tồn)</option></text>
+                        }
+                    </select>
+                </td>
+                <td><input name="Items[${rowIndex}].Quantity" type="number" class="form-control" /></td>
+                <td><input name="Items[${rowIndex}].UnitPrice" type="number" step="0.01" class="form-control" /></td>
+                <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">X</button></td>
+            `;
+            rowIndex++;
+        }
+        function removeRow(btn) {
+            btn.closest("tr").remove();
+        }
+    </script>
+}

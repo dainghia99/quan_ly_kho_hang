@@ -1,0 +1,15 @@
+﻿@model quan_ly_kho_hang.Models.ReceiptOut
+
+<h2>Xóa Phiếu Xuất</h2>
+
+<div class="alert alert-warning">
+    <p>Bạn có chắc chắn muốn xóa phiếu xuất sau?</p>
+    <p><strong>Mã phiếu:</strong> @Model.ReceiptNumber</p>
+    <p><strong>Ngày tạo:</strong> @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>
