@@ -1,0 +1,11 @@
+﻿@model quan_ly_kho_hang.Models.Inventory
+
+<h2>Xóa kiểm kê</h2>
+
+<p>Bạn có chắc chắn muốn xóa kiểm kê <b>@Model.InventoryNumber</b> không?</p>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-action="Index" class="btn btn-link">Hủy</a>
+</form>

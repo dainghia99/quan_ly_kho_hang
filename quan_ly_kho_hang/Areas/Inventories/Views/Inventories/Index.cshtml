@@ -1,0 +1,35 @@
+﻿@model IEnumerable<quan_ly_kho_hang.Models.Inventory>
+
+<h2>Danh sách kiểm kê</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Tạo kiểm kê</a>
+</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Mã</th>
+            <th>Trạng thái</th>
+            <th>Ngày tạo</th>
+            <th>Người tạo</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var inv in Model)
+        {
+            <tr>
+                <td>@inv.InventoryNumber</td>
+                <td>@inv.Status</td>
+                <td>@inv.CreatedAt.ToLocalTime()</td>
+                <td>@inv.CreatedByUserEmail</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@inv.Id" class="btn btn-info btn-sm">Chi tiết</a>
+                    <a asp-action="Edit" asp-route-id="@inv.Id" class="btn btn-warning btn-sm">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@inv.Id" class="btn btn-danger btn-sm">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
