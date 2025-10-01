@@ -1,0 +1,44 @@
+﻿@model quan_ly_kho_hang.Models.Inventory
+@{
+    ViewData["Title"] = "Sửa kiểm kê";
+    var products = ViewBag.Products as IEnumerable<quan_ly_kho_hang.Models.Product> ?? new List<quan_ly_kho_hang.Models.Product>();
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="mb-3">
+        <label class="form-label">Ghi chú</label>
+        <input asp-for="Notes" class="form-control" />
+    </div>
+
+    <h5>Mục kiểm kê</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Tồn hệ thống</th>
+                <th>Đếm thực tế</th>
+                <th>Ghi chú</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Items.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <input type="hidden" asp-for="Items[@i].ProductId" />
+                        @Model.Items[i].ProductName
+                    </td>
+                    <td>@Model.Items[i].ExpectedQuantity</td>
+                    <td><input asp-for="Items[@i].CountedQuantity" class="form-control" /></td>
+                    <td><input asp-for="Items[@i].Note" class="form-control" /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">Lưu</button>
+    <a asp-action="Index" class="btn btn-link">Hủy</a>
+</form>

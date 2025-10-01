@@ -108,6 +108,8 @@ builder.Services.AddScoped<IReceiptInRepository, ReceiptInRepository>();
 builder.Services.AddScoped<IReceiptInService, ReceiptInService>();
 builder.Services.AddScoped<IReceiptOutRepository, ReceiptOutRepository>();
 builder.Services.AddScoped<IReceiptOutService, ReceiptOutService>();
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
 
 
 var app = builder.Build();
