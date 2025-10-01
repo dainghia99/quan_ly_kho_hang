@@ -7,7 +7,9 @@ using quan_ly_kho_hang.Data;
 using quan_ly_kho_hang.Menu;
 using quan_ly_kho_hang.Models;
 using quan_ly_kho_hang.Repositories;
+using quan_ly_kho_hang.Repositories.Reports;
 using quan_ly_kho_hang.Services;
+using quan_ly_kho_hang.Services.Reports;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -110,6 +112,8 @@ builder.Services.AddScoped<IReceiptOutRepository, ReceiptOutRepository>();
 builder.Services.AddScoped<IReceiptOutService, ReceiptOutService>();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 
 var app = builder.Build();

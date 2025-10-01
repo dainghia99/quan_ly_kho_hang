@@ -1,0 +1,23 @@
+﻿@model IEnumerable<quan_ly_kho_hang.Models.Reports.TopProductDto>
+@{
+    ViewData["Title"] = "Top sản phẩm";
+}
+<h1>Top sản phẩm</h1>
+<table class="table table-hover">
+    <thead><tr><th>#</th><th>Sản phẩm</th><th>Đã bán</th><th>Doanh thu</th></tr></thead>
+    <tbody>
+    @{
+        int i=1;
+        foreach(var p in Model)
+        {
+            <tr>
+                <td>@i</td>
+                <td>@p.ProductName</td>
+                <td>@p.TotalSold</td>
+                <td>@String.Format("{0:N0}", p.TotalRevenue)</td>
+            </tr>;
+            i++;
+        }
+    }
+    </tbody>
+</table>

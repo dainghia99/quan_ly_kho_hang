@@ -1,0 +1,69 @@
+﻿@using quan_ly_kho_hang.Models.Reports
+
+@{
+    ViewData["Title"] = "Báo cáo & Thống kê - Tổng quan";
+    var sales = ViewBag.Sales as IEnumerable<quan_ly_kho_hang.Models.Reports.SalesSummaryDto>;
+    var top = ViewBag.TopProducts as IEnumerable<quan_ly_kho_hang.Models.Reports.TopProductDto>;
+    var low = ViewBag.LowStock as IEnumerable<quan_ly_kho_hang.Models.Reports.LowStockDto>;
+}
+
+<h1>Dashboard Báo cáo</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card p-3 mb-3">
+            <h5>Doanh thu (30 ngày)</h5>
+            <p class="h3">@String.Format("{0:N0}", sales?.Sum(s => s.TotalRevenue) ?? 0)</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 mb-3">
+            <h5>Tổng đơn bán</h5>
+            <p class="h3">@String.Format("{0:N0}", sales?.Sum(s => s.TotalQuantity) ?? 0)</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 mb-3">
+            <h5>Sản phẩm cảnh báo tồn thấp</h5>
+            <p class="h3">@(low?.Count() ?? 0)</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-3 p-3">
+            <h5>Top sản phẩm (30 ngày)</h5>
+            <table class="table table-sm">
+                <thead>
+                    <tr><th>#</th><th>Sản phẩm</th><th>Đã bán</th><th>Doanh thu</th></tr>
+                </thead>
+                <tbody>
+                @if (top != null)
+                {
+                    var i = 1;
+                    foreach (var t in top)
+                    {
+                        <tr>
+                            <td>@i</td>
+                            <td>@t.ProductName</td>
+                            <td>@t.TotalSold</td>
+                            <td>@String.Format("{0:N0}", t.TotalRevenue)</td>
+                        </tr>
+                        i++;
+                    }
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-3 p-3">
+            <h5>Tác vụ nhanh</h5>
+            <a class="btn btn-primary mb-2" href="@Url.Action("Sales","Reports", new { area = "Reports" })">Xem báo cáo bán hàng</a>
+            <a class="btn btn-outline-secondary mb-2" href="@Url.Action("InventoryValuation","Reports", new { area = "Reports" })">Tồn kho & định giá</a>
+            <a class="btn btn-outline-danger mb-2" href="@Url.Action("LowStock","Reports", new { area = "Reports" })">Cảnh báo tồn thấp</a>
+        </div>
+    </div>
+</div>
