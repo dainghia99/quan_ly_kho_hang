@@ -4,6 +4,7 @@ using quan_ly_kho_hang.Services.Reports;
 using ClosedXML.Excel;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using System.Globalization;
 
 namespace quan_ly_kho_hang.Areas.Reports.Controllers
 {
@@ -13,15 +14,58 @@ namespace quan_ly_kho_hang.Areas.Reports.Controllers
     public class ReportsController : Controller
     {
         private readonly IReportService _reportService;
+
         public ReportsController(IReportService reportService)
         {
             _reportService = reportService;
         }
 
-        // Dashboard: summary widgets
+        private TimeZoneInfo GetVietnamTimeZone()
+        {
+            try
+            {
+                return TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"); // Windows
+            }
+            catch
+            {
+                return TimeZoneInfo.FindSystemTimeZoneById("Asia/Bangkok"); // Linux/Mac
+            }
+        }
+
+        private void ParseDateRange(string fromStr, string toStr, out DateTime fromUtc, out DateTime toUtc)
+        {
+            var tz = GetVietnamTimeZone();
+
+            DateTime fromLocal, toLocal;
+            if (!string.IsNullOrWhiteSpace(fromStr) &&
+                DateTime.TryParseExact(fromStr, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var tmpFrom))
+            {
+                fromLocal = tmpFrom.Date;
+            }
+            else
+            {
+                fromLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tz).AddMonths(-1).Date;
+            }
+
+            if (!string.IsNullOrWhiteSpace(toStr) &&
+                DateTime.TryParseExact(toStr, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var tmpTo))
+            {
+                toLocal = tmpTo.Date.AddDays(1).AddTicks(-1);
+            }
+            else
+            {
+                toLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tz).Date.AddDays(1).AddTicks(-1);
+            }
+
+            fromUtc = TimeZoneInfo.ConvertTimeToUtc(fromLocal, tz);
+            toUtc = TimeZoneInfo.ConvertTimeToUtc(toLocal, tz);
+        }
+
+        // Dashboard
         public async Task<IActionResult> Index()
         {
-            var to = DateTime.UtcNow;
+            var tz = GetVietnamTimeZone();
+            var to = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tz);
             var from = to.AddMonths(-1);
             var sales = await _reportService.GetSalesSummaryAsync(from, to, "month");
             var top = await _reportService.GetTopSellingProductsAsync(from, to, 5);
@@ -34,63 +78,27 @@ namespace quan_ly_kho_hang.Areas.Reports.Controllers
             return View();
         }
 
-        // Sales listing / chart page
-        public async Task<IActionResult> Sales(DateTime? from, DateTime? to, string groupBy = "day")
+        // Sales page
+        [HttpGet]
+        public async Task<IActionResult> Sales(string from, string to, string groupBy = "day")
         {
-            var f = from ?? DateTime.UtcNow.AddMonths(-1);
-            var t = to ?? DateTime.UtcNow;
-            var data = await _reportService.GetSalesSummaryAsync(f, t, groupBy);
+            ParseDateRange(from, to, out var fromUtc, out var toUtc);
+
+            var data = await _reportService.GetSalesSummaryAsync(fromUtc, toUtc, groupBy);
+
+            var tz = GetVietnamTimeZone();
+            ViewBag.From = TimeZoneInfo.ConvertTimeFromUtc(fromUtc, tz).Date;
+            ViewBag.To = TimeZoneInfo.ConvertTimeFromUtc(toUtc, tz).Date;
+            ViewBag.GroupBy = groupBy;
+
             return View(data);
         }
 
-        public async Task<IActionResult> TopProducts(DateTime? from, DateTime? to, int limit = 10)
+        [HttpGet]
+        public async Task<IActionResult> ExportSalesToExcel(string from, string to, string groupBy = "day")
         {
-            var f = from ?? DateTime.UtcNow.AddMonths(-1);
-            var t = to ?? DateTime.UtcNow;
-            var data = await _reportService.GetTopSellingProductsAsync(f, t, limit);
-            return View(data);
-        }
-
-        public async Task<IActionResult> Purchases(DateTime? from, DateTime? to, string groupBy = "day")
-        {
-            var f = from ?? DateTime.UtcNow.AddMonths(-1);
-            var t = to ?? DateTime.UtcNow;
-            var data = await _reportService.GetPurchaseSummaryAsync(f, t, groupBy);
-            return View(data);
-        }
-
-        public async Task<IActionResult> InventoryValuation()
-        {
-            var data = await _reportService.GetInventoryValuationAsync();
-            return View(data);
-        }
-
-        public async Task<IActionResult> LowStock(int threshold = 10)
-        {
-            var data = await _reportService.GetLowStockAsync(threshold);
-            return View(data);
-        }
-
-        public async Task<IActionResult> InventoryDifferences(string id)
-        {
-            var data = await _reportService.GetInventoryDifferencesAsync(id);
-            return View(data);
-        }
-
-        public async Task<IActionResult> AuditLogs(DateTime? from, DateTime? to, int limit = 200)
-        {
-            var f = from ?? DateTime.UtcNow.AddMonths(-1);
-            var t = to ?? DateTime.UtcNow;
-            var data = await _reportService.GetAuditLogsAsync(f, t, limit);
-            return View(data);
-        }
-
-        // ✅ Export Sales Report to Excel
-        public async Task<IActionResult> ExportSalesToExcel(DateTime? from, DateTime? to, string groupBy = "day")
-        {
-            var f = from ?? DateTime.UtcNow.AddMonths(-1);
-            var t = to ?? DateTime.UtcNow;
-            var data = (await _reportService.GetSalesSummaryAsync(f, t, groupBy)).ToList();
+            ParseDateRange(from, to, out var fromUtc, out var toUtc);
+            var data = (await _reportService.GetSalesSummaryAsync(fromUtc, toUtc, groupBy)).ToList();
 
             using var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("SalesReport");
@@ -101,7 +109,9 @@ namespace quan_ly_kho_hang.Areas.Reports.Controllers
             for (int i = 0; i < data.Count; i++)
             {
                 var row = i + 2;
-                ws.Cell(row, 1).Value = data[i].Period.ToString("yyyy-MM-dd");
+                ws.Cell(row, 1).Value = groupBy == "month"
+                    ? data[i].Period.ToString("yyyy-MM")
+                    : data[i].Period.ToString("yyyy-MM-dd");
                 ws.Cell(row, 2).Value = data[i].TotalQuantity;
                 ws.Cell(row, 3).Value = data[i].TotalRevenue;
             }
@@ -109,15 +119,16 @@ namespace quan_ly_kho_hang.Areas.Reports.Controllers
             using var ms = new MemoryStream();
             workbook.SaveAs(ms);
             ms.Position = 0;
-            return File(ms.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "SalesReport.xlsx");
+            return File(ms.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "SalesReport.xlsx");
         }
 
-        // ✅ Export Sales Report to PDF
-        public async Task<IActionResult> ExportSalesToPdf(DateTime? from, DateTime? to, string groupBy = "day")
+        [HttpGet]
+        public async Task<IActionResult> ExportSalesToPdf(string from, string to, string groupBy = "day")
         {
-            var f = from ?? DateTime.UtcNow.AddMonths(-1);
-            var t = to ?? DateTime.UtcNow;
-            var data = (await _reportService.GetSalesSummaryAsync(f, t, groupBy)).ToList();
+            ParseDateRange(from, to, out var fromUtc, out var toUtc);
+            var data = (await _reportService.GetSalesSummaryAsync(fromUtc, toUtc, groupBy)).ToList();
 
             using var ms = new MemoryStream();
             var doc = new Document(PageSize.A4);
@@ -125,7 +136,10 @@ namespace quan_ly_kho_hang.Areas.Reports.Controllers
             doc.Open();
 
             doc.Add(new Paragraph("BÁO CÁO BÁN HÀNG"));
-            doc.Add(new Paragraph($"Từ: {f:yyyy-MM-dd} - Đến: {t:yyyy-MM-dd}"));
+            var tz = GetVietnamTimeZone();
+            var fromLocal = TimeZoneInfo.ConvertTimeFromUtc(fromUtc, tz);
+            var toLocal = TimeZoneInfo.ConvertTimeFromUtc(toUtc, tz);
+            doc.Add(new Paragraph($"Từ: {fromLocal:yyyy-MM-dd} - Đến: {toLocal:yyyy-MM-dd}"));
             doc.Add(new Paragraph("\n"));
 
             var table = new PdfPTable(3);
@@ -135,7 +149,9 @@ namespace quan_ly_kho_hang.Areas.Reports.Controllers
 
             foreach (var r in data)
             {
-                table.AddCell(r.Period.ToString("yyyy-MM-dd"));
+                table.AddCell(groupBy == "month"
+                    ? r.Period.ToString("yyyy-MM")
+                    : r.Period.ToString("yyyy-MM-dd"));
                 table.AddCell(r.TotalQuantity.ToString());
                 table.AddCell(r.TotalRevenue.ToString("N0"));
             }
@@ -146,31 +162,11 @@ namespace quan_ly_kho_hang.Areas.Reports.Controllers
             return File(ms.ToArray(), "application/pdf", "SalesReport.pdf");
         }
 
-        // Ví dụ Export khác: Top products
-        public async Task<IActionResult> ExportTopProductsToExcel(DateTime? from, DateTime? to, int limit = 100)
+        [HttpGet]
+        public async Task<IActionResult> InventoryValuation()
         {
-            var f = from ?? DateTime.UtcNow.AddMonths(-1);
-            var t = to ?? DateTime.UtcNow;
-            var data = (await _reportService.GetTopSellingProductsAsync(f, t, limit)).ToList();
-
-            using var workbook = new XLWorkbook();
-            var ws = workbook.Worksheets.Add("TopProducts");
-            ws.Cell(1, 1).Value = "ProductId";
-            ws.Cell(1, 2).Value = "ProductName";
-            ws.Cell(1, 3).Value = "TotalSold";
-            ws.Cell(1, 4).Value = "TotalRevenue";
-            for (int i = 0; i < data.Count; i++)
-            {
-                var row = i + 2;
-                ws.Cell(row, 1).Value = data[i].ProductId;
-                ws.Cell(row, 2).Value = data[i].ProductName;
-                ws.Cell(row, 3).Value = data[i].TotalSold;
-                ws.Cell(row, 4).Value = data[i].TotalRevenue;
-            }
-            using var ms = new MemoryStream();
-            workbook.SaveAs(ms);
-            ms.Position = 0;
-            return File(ms.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "TopProducts.xlsx");
+            var data = await _reportService.GetInventoryValuationAsync();
+            return View(data);
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using quan_ly_kho_hang.Models.Reports;
+﻿using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using quan_ly_kho_hang.Data;
+using quan_ly_kho_hang.Models.Reports;
 using quan_ly_kho_hang.Repositories.Reports;
 
 namespace quan_ly_kho_hang.Services.Reports
@@ -6,14 +9,41 @@ namespace quan_ly_kho_hang.Services.Reports
     public class ReportService : IReportService
     {
         private readonly IReportRepository _repo;
+        private readonly AppDbContext _context;
 
-        public ReportService(IReportRepository repo)
+        public ReportService(IReportRepository repo, AppDbContext context)
         {
             _repo = repo;
+            _context = context;
         }
 
-        public Task<IEnumerable<SalesSummaryDto>> GetSalesSummaryAsync(DateTime from, DateTime to, string groupBy = "day")
-            => _repo.GetSalesSummaryAsync(from, to, groupBy);
+        public async Task<IEnumerable<SalesSummaryDto>> GetSalesSummaryAsync(DateTime from, DateTime to, string groupBy)
+        {
+            
+            var query = _context.ReceiptOuts.AsQueryable()
+                .Where(r => r.CreatedAt >= from && r.CreatedAt <= to)
+                .SelectMany(r => r.Items, (r, d) => new
+                {
+                    r.CreatedAt,
+                    d.Quantity,
+                    d.UnitPrice
+                });
+
+            var result = query
+                .GroupBy(x => groupBy == "month"
+                    ? new DateTime(x.CreatedAt.Year, x.CreatedAt.Month, 1)
+                    : x.CreatedAt.Date)
+                .Select(g => new SalesSummaryDto
+                {
+                    Period = g.Key,
+                    TotalQuantity = g.Sum(x => x.Quantity ?? 0),
+                    TotalRevenue = g.Sum(x => (x.Quantity ?? 0) * x.UnitPrice)
+                })
+                .OrderBy(x => x.Period)
+                .ToList();
+
+            return await Task.FromResult(result);
+        }
 
         public Task<IEnumerable<TopProductDto>> GetTopSellingProductsAsync(DateTime from, DateTime to, int limit = 10)
             => _repo.GetTopSellingProductsAsync(from, to, limit);
