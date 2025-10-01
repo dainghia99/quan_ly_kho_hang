@@ -1,0 +1,18 @@
+﻿@model IEnumerable<quan_ly_kho_hang.Models.Reports.LowStockDto>
+@{
+    ViewData["Title"] = "Cảnh báo tồn thấp";
+}
+<h1>Cảnh báo tồn thấp</h1>
+<table class="table table-sm">
+    <thead><tr><th>Sản phẩm</th><th>Số lượng</th><th>Ngưỡng</th></tr></thead>
+    <tbody>
+    @foreach(var l in Model)
+    {
+        <tr>
+            <td>@l.ProductName</td>
+            <td>@l.Quantity</td>
+            <td>@l.Threshold</td>
+        </tr>
+    }
+    </tbody>
+</table>

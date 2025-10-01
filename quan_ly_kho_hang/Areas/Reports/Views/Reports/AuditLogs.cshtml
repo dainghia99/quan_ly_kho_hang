@@ -1,0 +1,19 @@
+﻿@model IEnumerable<quan_ly_kho_hang.Models.Reports.AuditLogDto>
+@{
+    ViewData["Title"] = "Nhật ký hoạt động";
+}
+<h1>Nhật ký hoạt động</h1>
+<table class="table table-hover">
+    <thead><tr><th>Thời gian</th><th>Hành động</th><th>Người thực hiện</th><th>Chi tiết</th></tr></thead>
+    <tbody>
+    @foreach(var a in Model)
+    {
+        <tr>
+            <td>@a.Timestamp.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+            <td>@a.Action</td>
+            <td>@a.PerformedByEmail</td>
+            <td><pre style="white-space:pre-wrap">@a.Details</pre></td>
+        </tr>
+    }
+    </tbody>
+</table>

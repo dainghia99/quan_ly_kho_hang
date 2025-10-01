@@ -1,0 +1,25 @@
+﻿@model IEnumerable<quan_ly_kho_hang.Models.Reports.InventoryValuationDto>
+@{
+    ViewData["Title"] = "Định giá tồn kho";
+}
+<h1>Định giá tồn kho</h1>
+<table class="table table-bordered">
+    <thead><tr><th>Sản phẩm</th><th>Số lượng</th><th>Giá đơn vị</th><th>Giá trị</th></tr></thead>
+    <tbody>
+    @foreach(var p in Model)
+    {
+        <tr>
+            <td>@p.ProductName</td>
+            <td>@p.Quantity</td>
+            <td>@String.Format("{0:N0}", p.UnitPrice)</td>
+            <td>@String.Format("{0:N0}", p.TotalValue)</td>
+        </tr>
+    }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="3">Tổng</th>
+            <th>@String.Format("{0:N0}", Model.Sum(m => m.TotalValue))</th>
+        </tr>
+    </tfoot>
+</table>
