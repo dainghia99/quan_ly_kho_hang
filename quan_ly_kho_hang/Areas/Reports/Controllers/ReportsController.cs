@@ -168,5 +168,13 @@ namespace quan_ly_kho_hang.Areas.Reports.Controllers
             var data = await _reportService.GetInventoryValuationAsync();
             return View(data);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> LowStock(int threshold = 10)
+        {
+            var data = await _reportService.GetLowStockAsync(threshold);
+            ViewBag.Threshold = threshold;
+            return View(data);
+        }
     }
 }
