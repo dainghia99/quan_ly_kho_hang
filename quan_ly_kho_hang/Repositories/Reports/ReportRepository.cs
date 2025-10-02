@@ -231,10 +231,7 @@ namespace quan_ly_kho_hang.Repositories.Reports
 
         public async Task<IEnumerable<LowStockDto>> GetLowStockAsync(int defaultThreshold = 10)
         {
-            // Assumes 'Alert' collection may store thresholds; otherwise use defaultThreshold
-            // Strategy: if Alerts collection has threshold entries for products, prefer them; else fallback to product.Quantity <= defaultThreshold
-
-            // Simple: find products with Quantity <= defaultThreshold
+          
             var filter = Builders<Product>.Filter.Lte(p => p.Quantity, defaultThreshold);
             var projection = Builders<Product>.Projection.Include(p => p.Id).Include(p => p.Name).Include(p => p.Quantity);
             var cursor = await _products.FindAsync(filter, new FindOptions<Product, BsonDocument> { Projection = projection });
