@@ -1,25 +1,25 @@
 @model CreateRoleModel
 @{
-    ViewData["Title"] = "Tạo role mới";
+    ViewData["Title"] = "Tạo Role Mới";
 }
-<h2>@ViewData["Title"]</h2>
+
 <partial name="_StatusMessage"></partial>
 
-<hr>
+
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="input-style-1 col-md-6">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <label asp-for="Name"></label>
+                <input asp-for="Name"/>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Tạo mới" class="btn btn-primary" />
-                <a class="btn btn-primary" asp-action="Index">Danh sách các role</a>
+                <button type="submit" class="my-3 main-btn success-btn-outline rounded-md btn-hover">Tạo mới</button>
+                <a class="my-3 main-btn success-btn-outline rounded-md btn-hover" asp-action="Index">Danh sách các role</a>
             </div>
         </form>
     </div>
