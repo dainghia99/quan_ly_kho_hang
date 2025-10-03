@@ -1,28 +1,52 @@
 ﻿@model quan_ly_kho_hang.Models.ReceiptIn
+@{
+    ViewData["Title"] = "Chi tiết Phiếu Nhập";
+    ViewData["Slug"] = "Chi tiết phiếu nhập";
+}
 
-<h2>Chi tiết Phiếu Nhập</h2>
-<p><b>Mã Phiếu:</b> @Model.ReceiptNumber</p>
-<p><b>Ngày Tạo:</b> @Model.CreatedAt.ToLocalTime()</p>
-<p><b>Người Tạo:</b> @Model.CreatedByUserEmail</p>
+<p class="my-3"><b>Mã Phiếu:</b> @Model.ReceiptNumber</p>
+<p class="my-3"><b>Ngày Tạo:</b> @Model.CreatedAt.ToLocalTime()</p>
+<p class="my-3"><b>Người Tạo:</b> @Model.CreatedByUserEmail</p>
 
-<h4>Sản phẩm</h4>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>ProductId</th>
-            <th>Số lượng</th>
-            <th>Đơn giá</th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model.Items)
-    {
-        <tr>
-            <td>@item.ProductId</td>
-            <td>@item.Quantity</td>
-            <td>@item.UnitPrice</td>
-        </tr>
-    }
-    </tbody>
-</table>
-<a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+
+<div class="row">
+        <div class="col-lg-12">
+        <div class="card-style mb-30">
+        <h6 class="mb-10">Sản Phẩm</h6>
+        <p class="text-sm mb-20">
+        Danh sách các sản phẩm
+        </p>
+        <div class="table-wrapper table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th><h6>Mã Sản phẩm</h6></th>
+                <th><h6>Số lượng</h6></th>
+                <th><h6>Đơn giá trung bình</h6></th>
+                <th><h6></h6></th>
+                <th><h6></h6></th>
+            </tr>
+            <!-- end table row-->
+            </thead>
+            <tbody>
+               @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.ProductId</td>
+                        <td>@item.Quantity</td>
+                        <td>@Math.Ceiling(item.UnitPrice).ToString("N0", new System.Globalization.CultureInfo("vi-VN")) VNĐ</td>
+                    </tr>
+                }
+
+          
+                    </tbody>
+                </table>
+                <!-- end table -->
+                </div>
+            </div>
+            <!-- end card -->
+            </div>
+            <!-- end col -->
+        </div>
+
+<a asp-action="Index" class="main-btn success-btn-outline rounded-md btn-hover my-3">Quay lại</a>
