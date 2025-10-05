@@ -1,9 +1,9 @@
 ﻿@model quan_ly_kho_hang.Models.ReceiptOut
 @{
+    ViewData["Title"] = "Thông Tin Chi Tiết";
+    ViewData["Slug"] = "Chi tiết";
     var products = ViewBag.Products as List<quan_ly_kho_hang.Models.Product>;
 }
-
-<h2>Chi tiết Phiếu Xuất</h2>
 
 <div class="mb-3">
     <label><strong>Mã Phiếu:</strong></label>
@@ -18,26 +18,69 @@
     <span>@Model.CreatedByUserEmail</span>
 </div>
 
-<h4>Danh sách sản phẩm xuất</h4>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Tên sản phẩm</th>
-            <th>Số lượng</th>
-            <th>Đơn giá</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Items)
-        {
-            var product = products?.FirstOrDefault(p => p.Id == item.ProductId);
-            <tr>
-                <td>@(product?.Name ?? item.ProductId)</td>
-                <td>@item.Quantity</td>
-                <td>@item.UnitPrice.ToString("N0")</td>
-            </tr>
-        }
-    </tbody>
-</table>
 
-<a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+<div class="row">
+    <div class="col-lg-12">
+    <div class="card-style mb-30">
+        <h6 class="mb-10">Danh sách các sản phẩm</h6>
+        <p class="text-sm mb-20">
+       Danh sách các sản phẩm xuất
+        </p>
+        <div class="table-wrapper table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th><h6>Tên Sản Phẩm</h6></th>
+                <th><h6>Số Lượng</h6></th>
+                <th><h6>Đơn Giá</h6></th>
+                <th><h6></h6></th>
+                <th><h6></h6></th>
+            </tr>
+            <!-- end table row-->
+            </thead>
+            <tbody>
+                  <tr>
+                        @foreach (var item in Model.Items)
+                        {
+                            var product = products?.FirstOrDefault(p => p.Id == item.ProductId);
+                  
+                        
+                            <td class="min-width">
+                                <div class="lead">
+                                    <div class="lead-text">
+                                    <p>@(product?.Name ?? item.ProductId)</p>
+                                    </div>
+                                </div>
+                            </td>
+                            
+                        
+                        
+                            <td>
+                                <div class="lead">
+                                    <div class="lead-text">
+                                        <p>@item.Quantity</p>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="lead">
+                                    <div class="lead-text">
+                                        <p>@item.UnitPrice.ToString("N0") VNĐ</p>
+                                    </div>
+                                </div>
+                            </td>
+                                
+                        }
+                </tr>
+            </tbody>
+        </table>
+        <!-- end table -->
+        </div>
+    </div>
+    <!-- end card -->
+    </div>  
+    <!-- end col -->
+</div>
+
+<a asp-action="Index" class="main-btn success-btn-outline rounded-md btn-hover my-3">Quay lại</a>
