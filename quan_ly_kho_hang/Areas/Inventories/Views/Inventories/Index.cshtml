@@ -1,35 +1,88 @@
 ﻿@model IEnumerable<quan_ly_kho_hang.Models.Inventory>
 
-<h2>Danh sách kiểm kê</h2>
+@{
+    ViewData["Title"] = "Kiểm Kê Kho Hàng";
+    ViewData["Slug"] = "Kiểm kê kho";
+}
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Tạo kiểm kê</a>
+    <a asp-action="Create" class="main-btn success-btn-outline rounded-md btn-hover my-3">Tạo kiểm kê</a>
 </p>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Mã</th>
-            <th>Trạng thái</th>
-            <th>Ngày tạo</th>
-            <th>Người tạo</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var inv in Model)
-        {
+<div class="row">
+    <div class="col-lg-12">
+    <div class="card-style mb-30">
+        <h6 class="mb-10">Kiểm Kê Kho Hàng</h6>
+        <p class="text-sm mb-20">
+        Danh sách các đợt kiểm kê kho hàng
+        </p>
+        <div class="table-wrapper table-responsive">
+        <table class="table">
+            <thead>
             <tr>
-                <td>@inv.InventoryNumber</td>
-                <td>@inv.Status</td>
-                <td>@inv.CreatedAt.ToLocalTime()</td>
-                <td>@inv.CreatedByUserEmail</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@inv.Id" class="btn btn-info btn-sm">Chi tiết</a>
-                    <a asp-action="Edit" asp-route-id="@inv.Id" class="btn btn-warning btn-sm">Sửa</a>
-                    <a asp-action="Delete" asp-route-id="@inv.Id" class="btn btn-danger btn-sm">Xóa</a>
-                </td>
+                <th><h6>Mã Phiếu</h6></th>
+                <th><h6>Trạng Thái</h6></th>
+                <th><h6>Ngày Tạo</h6></th>
+                <th><h6>Người Tạo</h6></th>
+                <th><h6>Tùy Chọn</h6></th>
             </tr>
-        }
-    </tbody>
-</table>
+            <!-- end table row-->
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        
+                        <td class="min-width">
+                            <div class="lead">
+                                <div class="lead-text">
+                                <p><a asp-action="Edit" asp-route-id="@r.Id">@r.InventoryNumber</a></p>
+                                </div>
+                            </div>
+                        </td>
+                            
+                        
+                        
+                        <td>
+                            <div class="lead">
+                                <div class="lead-text">
+                                    <p><a asp-action="Edit" asp-route-id="@r.Id">@r.Status</a></p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="lead">
+                                <div class="lead-text">
+                                    <p><a asp-action="Edit" asp-route-id="@r.Id">@r.CreatedAt.ToLocalTime()</a></p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="lead">
+                                <div class="lead-text">
+                                    <p><a asp-action="Edit" asp-route-id="@r.Id">@r.CreatedByUserEmail</a></p>
+                                </div>
+                            </div>
+                        </td>
+                        <td><p><a asp-action="Details" asp-route-id="@r.Id" class="main-btn success-btn-outline rounded-md btn-hover my-3">Cập nhật trạng thái</a></p></td>
+                  
+                        <td>
+                            <div class="action">
+                                <a asp-action="Delete" asp-route-id="@r.Id" class="text-danger"><i class="lni lni-trash-can"></i></a>
+                            </div>  
+                        </td>
+                    </tr>
+                }
+
+            <tr>
+            </tbody>
+        </table>
+        <!-- end table -->
+        </div>
+    </div>
+    <!-- end card -->
+    </div>
+    <!-- end col -->
+</div>

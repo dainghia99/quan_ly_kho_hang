@@ -1,45 +1,109 @@
 ﻿@model quan_ly_kho_hang.Models.Inventory
 
-<h2>Chi tiết kiểm kê</h2>
+@{
+    ViewData["Title"] = "Cập Nhật Trạng Thái";
+    ViewData["Slug"] = "Cập nhật trạng thái";
+}
 
-<p><b>Mã:</b> @Model.InventoryNumber</p>
-<p><b>Trạng thái:</b> @Model.Status</p>
-<p><b>Ghi chú:</b> @Model.Notes</p>
+<p class="my-3"><b>Mã:</b> @Model.InventoryNumber</p>
+<p class="my-3"><b>Trạng thái:</b> @Model.Status</p>
+<p class="my-3"><b>Ghi chú:</b> @Model.Notes</p>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Sản phẩm</th>
-            <th>Tồn hệ thống</th>
-            <th>Đếm thực tế</th>
-            <th>Chênh lệch</th>
-            <th>Ghi chú</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Items)
-        {
+<div class="row">
+    <div class="col-lg-12">
+    <div class="card-style mb-30">
+        <h6 class="mb-10">Cập Nhật Thông Tin</h6>
+        <p class="text-sm mb-20">
+        Danh sách các sản phẩm đã kiểm kê
+        </p>
+        <div class="table-wrapper table-responsive">
+        <table class="table">
+            <thead>
             <tr>
-                <td>@item.ProductName</td>
-                <td>@item.ExpectedQuantity</td>
-                <td>@item.CountedQuantity</td>
-                <td>@item.Difference</td>
-                <td>@item.Note</td>
+                <th><h6>Sản Phẩm</h6></th>
+                <th><h6>Tồn Hệ Thống</h6></th>
+                <th><h6>Đếm Thực Tế</h6></th>
+                <th><h6>Chênh Lệch</h6></th>
+                <th><h6>Ghi Chú</h6></th>
             </tr>
-        }
-    </tbody>
-</table>
+            <!-- end table row-->
+            </thead>
+            <tbody>
+                @foreach (var r in Model.Items)
+                {
+                    <tr>
+                        
+                        <td class="min-width">
+                            <div class="lead">
+                                <div class="lead-text">
+                                <p>@r.ProductName</p>
+                                </div>
+                            </div>
+                        </td>
+                            
+                        
+                        
+                        <td>
+                            <div class="lead">
+                                <div class="lead-text">
+                                    <p>@r.ExpectedQuantity</p>
+                                </div>
+                            </div>
+                        </td>
 
-<form asp-action="Complete" asp-route-id="@Model.Id" method="post">
-    <button type="submit" class="btn btn-success">Hoàn tất</button>
-</form>
+                        <td>
+                            <div class="lead">
+                                <div class="lead-text">
+                                    <p>@r.CountedQuantity</p>
+                                </div>
+                            </div>
+                        </td>
 
-<form asp-action="Apply" asp-route-id="@Model.Id" method="post">
-    <button type="submit" class="btn btn-primary">Áp dụng tồn kho</button>
-</form>
+                        <td>
+                            <div class="lead">
+                                <div class="lead-text">
+                                    <p>@r.Difference</p>
+                                </div>
+                            </div>
+                        </td>
 
-<form asp-action="Cancel" asp-route-id="@Model.Id" method="post">
-    <button type="submit" class="btn btn-danger">Hủy kiểm kê</button>
-</form>
+                        <td>
+                            <div class="lead">
+                                <div class="lead-text">
+                                    <p>@r.Note</p>
+                                </div>
+                            </div>
+                        </td>
+                        
+                    </tr>
+                }
 
-<a asp-action="Index" class="btn btn-link">Quay lại</a>
+            <tr>
+            </tbody>
+        </table>
+        <!-- end table -->
+        </div>
+    </div>
+    <!-- end card -->
+    </div>
+    <!-- end col -->
+</div>
+
+<h4>Các trạng thái</h4>
+
+<div class="d-flex gap-3 align-items-center">
+    <form asp-action="Complete" asp-route-id="@Model.Id" method="post">
+        <button type="submit" class="main-btn success-btn-outline rounded-md btn-hover my-3">Hoàn tất</button>
+    </form>
+
+    <form asp-action="Apply" asp-route-id="@Model.Id" method="post">
+        <button type="submit" class="main-btn info-btn-outline rounded-md btn-hover my-3">Áp dụng tồn kho</button>
+    </form>
+
+    <form asp-action="Cancel" asp-route-id="@Model.Id" method="post">
+        <button type="submit" class="main-btn danger-btn-outline rounded-md btn-hover">Hủy kiểm kê</button>
+    </form>
+</div>
+
+
+<a asp-action="Index" class="main-btn success-btn-outline rounded-md btn-hover my-3">Quay lại</a>

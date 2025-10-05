@@ -3,48 +3,50 @@
 
 @{
     ViewData["Title"] = "Tạo kiểm kê mới";
+    ViewData["Slug"] = "Tạo mới kiểm kê";
     var products = ViewBag.Products as IEnumerable<quan_ly_kho_hang.Models.Product> ?? new List<quan_ly_kho_hang.Models.Product>();
 }
-<h1>@ViewData["Title"]</h1>
 
-<form asp-action="Create" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="mb-3">
-        <label class="form-label">Ghi chú</label>
-        <input asp-for="Notes" class="form-control"/>
-    </div>
+<div class="input-style-1">
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="mb-3">
+            <label class="form-label">Ghi chú</label>
+            <input asp-for="Notes"/>
+        </div>
 
-    <h5>Thêm mục kiểm kê</h5>
-    <div id="inventory-items">
-        <div class="row mb-2 inventory-item">
-            <div class="col-md-5">
-                <select class="form-select product-select" name="Items[0].ProductId" onchange="onProductSelected(this)">
-                    <option value="">-- Chọn sản phẩm --</option>
-                    @foreach(var p in products)
-                    {
-                        <option value="@p.Id" data-name="@p.Name" data-qty="@p.Quantity">@p.Name (@p.Quantity)</option>
-                    }
-                </select>
-            </div>
-            <div class="col-md-3">
-                <input type="number" name="Items[0].CountedQuantity" class="form-control" placeholder="Số lượng kiểm đếm" required />
-            </div>
-            <div class="col-md-3">
-                <input type="text" name="Items[0].Note" class="form-control" placeholder="Ghi chú (tuỳ chọn)" />
-            </div>
-            <div class="col-md-1">
-                <button type="button" class="btn btn-danger btn-sm" onclick="removeItem(this)">-</button>
+        <h5 class="my-3">Thêm mục kiểm kê</h5>
+        <div id="inventory-items">
+            <div class="row mb-2 select-style-1 inventory-item">
+                <div class="col-md-5 select-position">
+                    <select class="form-select product-select" name="Items[0].ProductId" onchange="onProductSelected(this)">
+                        <option value="">-- Chọn sản phẩm --</option>
+                        @foreach(var p in products)
+                        {
+                            <option value="@p.Id" data-name="@p.Name" data-qty="@p.Quantity">@p.Name (@p.Quantity)</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input type="number" name="Items[0].CountedQuantity" class="form-control" placeholder="Số lượng kiểm đếm" required />
+                </div>
+                <div class="col-md-3">
+                    <input type="text" name="Items[0].Note" class="form-control" placeholder="Ghi chú (tuỳ chọn)" />
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="main-btn danger-btn-outline rounded-md btn-hover" onclick="removeItem(this)">-</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <button type="button" class="btn btn-secondary mb-3" onclick="addItem()">Thêm mục</button>
+        <button type="button" class="main-btn success-btn-outline rounded-md btn-hover my-3" onclick="addItem()">Thêm mục</button>
 
-    <div>
-        <button type="submit" class="btn btn-primary">Lưu kiểm kê</button>
-        <a asp-action="Index" class="btn btn-link">Hủy</a>
-    </div>
-</form>
+        <div>
+            <button type="submit" class="main-btn success-btn-outline rounded-md btn-hover my-3">Lưu kiểm kê</button>
+            <a asp-action="Index" class="main-btn danger-btn-outline rounded-md btn-hover">Hủy</a>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
 <script>
@@ -54,19 +56,21 @@
         const div = document.createElement('div');
         div.className = 'row mb-2 inventory-item';
         div.innerHTML = `
-            <div class="col-md-5">
-                <select class="form-select product-select" name="Items[${idx}].ProductId" onchange="onProductSelected(this)">
-                    ${document.querySelector('.product-select').innerHTML}
-                </select>
+            <div class="col-md-5 select-style-1">
+                <div class="select-position">
+                    <select class="form-select product-select" name="Items[${idx}].ProductId" onchange="onProductSelected(this)">
+                        ${document.querySelector('.product-select').innerHTML}
+                    </select>
+                </div>
+             </div>
+            <div class="col-md-3">
+                <input type="number" name="Items[${idx}].CountedQuantity" placeholder="Số lượng kiểm đếm" required />
             </div>
             <div class="col-md-3">
-                <input type="number" name="Items[${idx}].CountedQuantity" class="form-control" placeholder="Số lượng kiểm đếm" required />
-            </div>
-            <div class="col-md-3">
-                <input type="text" name="Items[${idx}].Note" class="form-control" placeholder="Ghi chú (tuỳ chọn)" />
+                <input type="text" name="Items[${idx}].Note" placeholder="Ghi chú (tuỳ chọn)" />
             </div>
             <div class="col-md-1">
-                <button type="button" class="btn btn-danger btn-sm" onclick="removeItem(this)">-</button>
+                <button type="button" class="main-btn danger-btn-outline rounded-md btn-hover" onclick="removeItem(this)">-</button>
             </div>
         `;
         container.appendChild(div);
