@@ -1,18 +1,77 @@
 ﻿@model IEnumerable<quan_ly_kho_hang.Models.Reports.LowStockDto>
 @{
     ViewData["Title"] = "Cảnh báo tồn thấp";
+    ViewData["Slug"] = "Cảnh báo";
 }
-<h1>Cảnh báo tồn thấp</h1>
-<table class="table table-sm">
-    <thead><tr><th>Sản phẩm</th><th>Số lượng</th><th>Ngưỡng</th></tr></thead>
-    <tbody>
-    @foreach(var l in Model)
-    {
-        <tr>
-            <td>@l.ProductName</td>
-            <td>@l.Quantity</td>
-            <td>@l.Threshold</td>
-        </tr>
-    }
-    </tbody>
-</table>
+
+<div class="row">
+    <div class="col-lg-12">
+    <div class="card-style mb-30">
+        <h6 class="mb-10">Cảnh Báo Tồn Thấp</h6>
+        <p class="text-sm mb-20">
+        Cảnh báo các sản phẩm tồn kho thấp
+        </p>
+        <div class="table-wrapper table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th><h6>Sản Phẩm</h6></th>
+                <th><h6>Số Lượng</h6></th>
+                <th><h6>Ngưỡng</h6></th>
+                <th><h6></h6></th>
+                <th><h6></h6></th>
+            </tr>
+            <!-- end table row-->
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        
+                        <td class="min-width">
+                            <div class="lead">
+                                <div class="lead-text">
+                                <p>@r.ProductName</p>
+                                </div>
+                            </div>
+                        </td>
+                            
+                        
+                        
+                        <td>
+                            <div class="lead">
+                                <div class="lead-text">
+                                    <p>@r.Quantity</p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="lead">
+                                <div class="lead-text">
+                                    <p>@r.Threshold</p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            
+                        </td>
+                        <td><td>
+                  
+                        <td>
+                              
+                        </td>
+                    </tr>
+                }
+
+            
+            </tbody>
+        </table>
+        <!-- end table -->
+        </div>
+    </div>
+    <!-- end card -->
+    </div>
+    <!-- end col -->
+</div>

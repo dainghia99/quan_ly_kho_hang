@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using quan_ly_kho_hang.Models;
 using quan_ly_kho_hang.Services;
 
@@ -6,6 +7,7 @@ namespace quan_ly_kho_hang.Areas.ReceiptOuts.Controllers
 {
     [Area("ReceiptOuts")]
     [Route("phieu-xuat/[action]/{id?}")]
+    [Authorize(Roles = "Administrator, Editor")]
     public class ReceiptOutsController : Controller
     {
         private readonly IReceiptOutService _receiptOutService;
@@ -99,6 +101,7 @@ namespace quan_ly_kho_hang.Areas.ReceiptOuts.Controllers
             return View(receipt);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
             var receipt = await _receiptOutService.GetByIdAsync(id);

@@ -1,30 +1,77 @@
 ﻿@model IEnumerable<quan_ly_kho_hang.Models.ReceiptIn>
+@{
+    ViewData["Title"] = "Quản lý Phiếu Nhập";
+    ViewData["Slug"] = "Phiếu nhập";
+}
 
-<h2>Danh sách Phiếu Nhập</h2>
-<a asp-action="Create" class="btn btn-primary mb-3">Tạo Phiếu Nhập</a>
+<a asp-action="Create" class="main-btn success-btn-outline rounded-md btn-hover my-3">Tạo Phiếu Nhập</a>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Mã Phiếu</th>
-            <th>Ngày Tạo</th>
-            <th>Người Tạo</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var r in Model)
-    {
-        <tr>
-            <td>@r.ReceiptNumber</td>
-            <td>@r.CreatedAt.ToLocalTime()</td>
-            <td>@r.CreatedByUserEmail</td>
-            <td>
-                <a asp-action="Details" asp-route-id="@r.Id" class="btn btn-info btn-sm">Chi tiết</a>
-                <a asp-action="Edit" asp-route-id="@r.Id" class="btn btn-info btn-sm">Chỉnh sửa</a>
-                <a asp-action="Delete" asp-route-id="@r.Id" class="btn btn-danger btn-sm">Xóa</a>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
+<div class="row">
+    <div class="col-lg-12">
+    <div class="card-style mb-30">
+        <h6 class="mb-10">Phiếu nhập kho</h6>
+        <p class="text-sm mb-20">
+        Danh sách các phiếu nhập kho
+        </p>
+        <div class="table-wrapper table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th><h6>Mã Phiếu</h6></th>
+                <th><h6>Ngày Tạo</h6></th>
+                <th><h6>Người Tạo</h6></th>
+                <th><h6></h6></th>
+                <th><h6>Tùy Chọn</h6></th>
+            </tr>
+            <!-- end table row-->
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        
+                        <td class="min-width">
+                            <div class="lead">
+                                <div class="lead-text">
+                                <p><a asp-action="Edit" asp-route-id="@r.Id">@r.ReceiptNumber</a></p>
+                                </div>
+                            </div>
+                        </td>
+                            
+                        
+                        
+                        <td>
+                            <div class="lead">
+                                <div class="lead-text">
+                                    <p><a asp-action="Edit" asp-route-id="@r.Id">@r.CreatedAt.ToLocalTime()</a></p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="lead">
+                                <div class="lead-text">
+                                    <p><a asp-action="Edit" asp-route-id="@r.Id">@r.CreatedByUserEmail</a></p>
+                                </div>
+                            </div>
+                        </td>
+                        <td><p><a asp-action="Details" asp-route-id="@r.Id" class="main-btn success-btn-outline rounded-md btn-hover my-3">Chi tiết</a></p></td>
+                  
+                        <td>
+                            <div class="action">
+                                <a asp-action="Delete" asp-route-id="@r.Id" class="text-danger"><i class="lni lni-trash-can"></i></a>
+                            </div>  
+                        </td>
+                    </tr>
+                }
+
+            <tr>
+            </tbody>
+        </table>
+        <!-- end table -->
+        </div>
+    </div>
+    <!-- end card -->
+    </div>
+    <!-- end col -->
+</div>

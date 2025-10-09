@@ -2,70 +2,98 @@
 
 @{
     ViewData["Title"] = "Sửa Phiếu Nhập";
+    ViewData["Slug"] = "Sửa phiếu nhập";
 }
 
-<h2>@ViewData["Title"]</h2>
 
-<form asp-action="Edit" method="post">
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="Id" />
+<div class="input-style-1">
+    <form asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
 
-    <div class="form-group">
-        <label asp-for="ReceiptNumber" class="control-label"></label>
-        <input asp-for="ReceiptNumber" class="form-control" readonly />
-        <span asp-validation-for="ReceiptNumber" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label>Mã phiếu</label>
+            <input asp-for="ReceiptNumber" readonly />
+            <span asp-validation-for="ReceiptNumber" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="CreatedAt" class="control-label"></label>
-        <input asp-for="CreatedAt" class="form-control" readonly />
-        <span asp-validation-for="CreatedAt" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label>Ngày tạo</label>
+            <input asp-for="CreatedAt"readonly />
+            <span asp-validation-for="CreatedAt" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label>Người nhập</label>
-        <input asp-for="CreatedByUserEmail" class="form-control" readonly />
-    </div>
+        <div class="form-group">
+            <label>Người nhập</label>
+            <input asp-for="CreatedByUserEmail" readonly />
+        </div>
 
-    <h4>Danh sách sản phẩm</h4>
-    <table class="table">
-        <thead>
+        <h4 class="my-3">Danh sách sản phẩm</h4>
+        <div class="row">
+        <div class="col-lg-12">
+        <div class="card-style mb-30">
+        <h6 class="mb-10">Phiếu nhập kho</h6>
+        <p class="text-sm mb-20">
+        Danh sách các phiếu nhập kho
+        </p>
+        <div class="table-wrapper table-responsive">
+        <table class="table">
+            <thead>
             <tr>
-                <th>Sản phẩm</th>
-                <th>Số lượng</th>
-                <th>Đơn giá</th>
+                <th><h6>Sản phẩm</h6></th>
+                <th><h6>Số lượng</h6></th>
+                <th><h6>Đơn giá</h6></th>
+                <th><h6></h6></th>
+                <th><h6></h6></th>
             </tr>
-        </thead>
-        <tbody>
-            @for (int i = 0; i < Model.Items.Count; i++)
-            {
-                <tr>
-                    <td>
-                        <select asp-for="@Model.Items[i].ProductId"
-                                class="form-control"
-                                asp-items="@(new SelectList(ViewBag.Products, "Id", "Name", Model.Items[i].ProductId))">
-                        </select>
+            <!-- end table row-->
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Items.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            <div class="select-style-1 mt-3">
+                                <div class="col-md-10 select-position">
+                                    <select asp-for="@Model.Items[i].ProductId" 
+                                        asp-items="@(new SelectList(ViewBag.Products, "Id", "Name", Model.Items[i].ProductId))">
+                                    </select>
+                                </div>
+                            </div>
+                            <span asp-validation-for="@Model.Items[i].ProductId" class="text-danger"></span>
+                        </td>
+                        <td>
+                            <div class="col-md-10">
+                                <input asp-for="@Model.Items[i].Quantity" />
+                                <span asp-validation-for="@Model.Items[i].Quantity" class="text-danger"></span>
+                            </div>
+                        </td>
+                        <td>
+                             <div class="col-md-10">
+                                <input asp-for="@Model.Items[i].UnitPrice" class="col-md-10" />
+                                <span asp-validation-for="@Model.Items[i].UnitPrice" class="text-danger"></span>
+                             </div>
+                        </td>
+                    </tr>
+                }
 
-                        <span asp-validation-for="@Model.Items[i].ProductId" class="text-danger"></span>
-                    </td>
-                    <td>
-                        <input asp-for="@Model.Items[i].Quantity" class="form-control" />
-                        <span asp-validation-for="@Model.Items[i].Quantity" class="text-danger"></span>
-                    </td>
-                    <td>
-                        <input asp-for="@Model.Items[i].UnitPrice" class="form-control" />
-                        <span asp-validation-for="@Model.Items[i].UnitPrice" class="text-danger"></span>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+          
+                    </tbody>
+                </table>
+                <!-- end table -->
+                </div>
+            </div>
+            <!-- end card -->
+            </div>
+            <!-- end col -->
+        </div>
 
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Lưu</button>
-        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
-    </div>
-</form>
+        <div class="form-group">
+            <button type="submit" class="main-btn success-btn-outline rounded-md btn-hover my-3">Lưu</button>
+            <a asp-action="Index" class="main-btn danger-btn-outline rounded-md btn-hover">Quay lại</a>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -4,37 +4,81 @@
     ViewData["Slug"] = "product";
 }
 
+<a asp-action="Create" class="main-btn success-btn-outline rounded-md btn-hover my-3">Thêm mới</a>
 
-<a asp-action="Create" class="btn btn-primary mb-3">Thêm mới</a>
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="card-style mb-30">
+                  <h6 class="mb-10">Các sản phẩm</h6>
+                  <p class="text-sm mb-20">
+                    Danh sách các sản phẩm trong kho
+                  </p>
+                  <div class="table-wrapper table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th><h6>Tên Sản Phẩm</h6></th>
+                          <th><h6>Số Lượng</h6></th>
+                          <th><h6>Giá Trung Bình</h6></th>
+                          <th><h6>Hình Ảnh</h6></th>
+                          <th><h6>Tùy Chọn</h6></th>
+                        </tr>
+                        <!-- end table row-->
+                      </thead>
+                      <tbody>
+                           @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="min-width">
+                                        <div class="lead">
+                                          <div class="lead-text">
+                                            <p><a asp-action="Edit" asp-route-id="@item.Id">@item.Name</a></p>
+                                          </div>
+                                        </div>
+                                     </td>
+                                    <td>
+                                        <div class="lead">
+                                          <div class="lead-text">
+                                              <p><a asp-action="Edit" asp-route-id="@item.Id">@item.Quantity</a></p>
+                                          </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="lead">
+                                          <div class="lead-text">
+                                             <p><a class="text" asp-action="Edit" asp-route-id="@item.Id">@Math.Ceiling(item.Price ?? 0).ToString("N0", new System.Globalization.CultureInfo("vi-VN")) VNĐ</a></p>
+                                          </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="lead">
+                                          <div class="lead-image text-center">
+                                            @if (!string.IsNullOrEmpty(item.ImagePath))
+                                            {
+                                                <img
+                                                  src="@item.ImagePath"
+                                                  alt="anh"
+                                                />
+                                            }
+                                          </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="action">
+                                          <a asp-action="Delete" asp-route-id="@item.Id" class="text-danger"><i class="lni lni-trash-can"></i></a>
+                                        </div>
+                                        
+                                    </td>
+                                </tr>
+                            }
+                        <tr>
+                      </tbody>
+                    </table>
+                    <!-- end table -->
+                  </div>
+                </div>
+                <!-- end card -->
+              </div>
+              <!-- end col -->
+            </div>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Tên</th>
-            <th>Số lượng</th>
-            <th>Giá trung bình khi nhập kho</th>
-            <th>Hình ảnh</th>
-            <th>Tùy chọn</th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>@item.Name</td>
-            <td>@item.Quantity</td>
-            <td>@item.Price</td>
-            <td>
-                @if (!string.IsNullOrEmpty(item.ImagePath))
-                {
-                    <img src="@item.ImagePath" width="80" />
-                }
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Chỉnh sửa</a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Xóa</a>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>

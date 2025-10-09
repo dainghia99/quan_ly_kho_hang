@@ -38,33 +38,37 @@ namespace App.Areas.Identity.Controllers
 
         // GET: /ManageUser/Index
         [HttpGet]
-        public async Task<IActionResult> Index([FromQuery(Name = "p")] int currentPage = 1)
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var model = new UserListModel();
-            model.currentPage = currentPage;
+            int ITEMS_PER_PAGE = 10;
+            var allUsers = _userManager.Users.ToList();
+            int totalUsers = allUsers.Count;
+            int countPages = (int)Math.Ceiling((double)totalUsers / ITEMS_PER_PAGE);
 
-            var qr = _userManager.Users.OrderBy(u => u.UserName);
+            var usersPage = allUsers
+                .Skip((page - 1) * ITEMS_PER_PAGE)
+                .Take(ITEMS_PER_PAGE)
+                .ToList();
 
-            model.totalUsers = qr.Count();
-            model.countPages = (int)Math.Ceiling((double)model.totalUsers / model.ITEMS_PER_PAGE);
+            var model = new UserListModel
+            {
+                totalUsers = totalUsers,
+                countPages = countPages,
+                currentPage = page,
+                users = new List<UserAndRole>()
+            };
 
-            if (model.currentPage < 1) model.currentPage = 1;
-            if (model.currentPage > model.countPages) model.currentPage = model.countPages;
-
-            var users = qr.Skip((model.currentPage - 1) * model.ITEMS_PER_PAGE)
-                          .Take(model.ITEMS_PER_PAGE)
-                          .Select(u => new UserAndRole()
-                          {
-                              Id = u.Id,
-                              UserName = u.UserName,
-                          }).ToList();
-
-            model.users = users;
-
-            foreach (var user in model.users)
+            foreach (var user in usersPage)
             {
                 var roles = await _userManager.GetRolesAsync(user);
-                user.RoleNames = string.Join(",", roles);
+                model.users.Add(new UserAndRole
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    RoleNames = roles.Count > 0 ? string.Join(", ", roles) : string.Empty
+                });
             }
 
             return View(model);

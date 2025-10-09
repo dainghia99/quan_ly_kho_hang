@@ -1,12 +1,13 @@
 ﻿@model IEnumerable<quan_ly_kho_hang.Models.Reports.SalesSummaryDto>
 @{
-    ViewData["Title"] = "Báo cáo bán hàng";
+    ViewData["Title"] = "Báo Cáo Bán Hàng";
+    ViewData["Slug"] = "Báo cáo bán hàng";
     var from = ViewBag.From as DateTime?;
     var to = ViewBag.To as DateTime?;
     var groupBy = ViewBag.GroupBy as string ?? "day";
 }
 
-<h1>Báo cáo bán hàng</h1>
+
 
 <form asp-action="Sales" asp-area="Reports" method="get" class="row g-2 mb-3">
     <div class="col-auto">
@@ -24,40 +25,92 @@
         </select>
     </div>
     <div class="col-auto">
-        <button class="btn btn-primary">Lọc</button>
+        <button class="main-btn success-btn-outline rounded-md btn-hover">Lọc</button>
     </div>
     <div class="col-auto">
         <a asp-action="ExportSalesToExcel" asp-area="Reports"
            asp-route-from="@(from?.ToString("yyyy-MM-dd"))"
            asp-route-to="@(to?.ToString("yyyy-MM-dd"))"
            asp-route-groupBy="@groupBy"
-           class="btn btn-success">Xuất Excel</a>
+           class="main-btn success-btn-outline rounded-md btn-hover">Xuất Excel</a>
     </div>
     <div class="col-auto">
         <a asp-action="ExportSalesToPdf" asp-area="Reports"
            asp-route-from="@(from?.ToString("yyyy-MM-dd"))"
            asp-route-to="@(to?.ToString("yyyy-MM-dd"))"
            asp-route-groupBy="@groupBy"
-           class="btn btn-danger">Xuất PDF</a>
+           class="main-btn success-btn-outline rounded-md btn-hover">Xuất PDF</a>
     </div>
 </form>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Ngày/Tháng</th>
-            <th>Số lượng</th>
-            <th>Doanh thu</th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach(var r in Model)
-    {
-        <tr>
-            <td>@(groupBy == "month" ? r.Period.ToString("yyyy-MM") : r.Period.ToString("yyyy-MM-dd"))</td>
-            <td>@r.TotalQuantity</td>
-            <td>@String.Format("{0:N0}", r.TotalRevenue)</td>
-        </tr>
-    }
-    </tbody>
-</table>
+<div class="row">
+    <div class="col-lg-12">
+    <div class="card-style mb-30">
+        <h6 class="mb-10">Báo Cáo Bán Hàng</h6>
+        <p class="text-sm mb-20">
+        Danh sách lịch sử bán hàng
+        </p>
+        <div class="table-wrapper table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th><h6>Ngày/Tháng</h6></th>
+                <th><h6>Số Lượng</h6></th>
+                <th><h6>Doanh Thu</h6></th>
+                <th><h6></h6></th>
+                <th><h6></h6></th>
+            </tr>
+            <!-- end table row-->
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        
+                        <td class="min-width">
+                            <div class="lead">
+                                <div class="lead-text">
+                                    <p>@(groupBy == "month" ? r.Period.ToString("yyyy-MM") : r.Period.ToString("dd-MM-yyyy"))</p>
+                                </div>
+                            </div>
+                        </td>
+                            
+                        
+                        
+                        <td>
+                            <div class="lead">
+                                <div class="lead-text">
+                                    <p>@r.TotalQuantity</p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="lead">
+                                <div class="lead-text">
+                                    <p>@String.Format("{0:N0}", r.TotalRevenue) VNĐ</p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            
+                        </td>
+                        <td></td>
+                  
+                        <td>
+                            
+                        </td>
+                    </tr>
+                }
+
+            <tr>
+            </tbody>
+        </table>
+        <!-- end table -->
+        </div>
+    </div>
+    <!-- end card -->
+    </div>
+    <!-- end col -->
+</div>

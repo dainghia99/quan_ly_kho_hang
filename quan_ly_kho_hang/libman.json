@@ -1,14 +1,18 @@
 {
-  "version": "1.0",
-  "defaultProvider": "cdnjs",
-  "libraries": [
-    {
-        "library": "multiple-select@1.2.3",
-        "destination": "wwwroot/lib/multiple-select"
-    },
-    {
-        "library": "jquery@3.7.1",
-        "destination": "wwwroot/lib/jquery"
-    }
-  ]
+    "version": "1.0",
+    "defaultProvider": "cdnjs",
+    "libraries": [
+        {
+            "library": "multiple-select@1.2.3",
+            "destination": "wwwroot/lib/multiple-select"
+        },
+        {
+            "library": "jquery@3.7.1",
+            "destination": "wwwroot/lib/jquery"
+        },
+        {
+            "library": "select2@4.1.0-rc.0",
+            "destination": "wwwroot/lib/select2"
+        }
+    ]
 }

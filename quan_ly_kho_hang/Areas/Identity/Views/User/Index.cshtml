@@ -4,45 +4,69 @@
 
 @{
     ViewData["Title"] = "Danh Sách Các Thành Viên";
-    ViewData["Slug"] = "Auth";
+    ViewData["Slug"] = "Tài khoản";
 }
 
 <partial name="_StatusMessage"></partial>
-<p>Tổng số thành viên: @Model.totalUsers</p>
-
-<table class="table">
-    <tr>
-        <th>Tên user</th>
-        <th>Vai trò (role)</th>
-        <th>Tác vụ</th>
-    </tr>
-    @foreach (var user in Model.users)
-    {
-        <tr>
-            <td>@user.UserName</td>
-            <td>
-                @if (string.IsNullOrEmpty(user.RoleNames))
+<div class="row">
+    <div class="col-lg-12">
+    <div class="card-style mb-30">
+        <h6 class="mb-10">Danh sách các tài khoản trong hệ thống</h6>
+        <p class="text-sm mb-20">
+        Tổng số tài khoản: @Model.totalUsers
+        </p>
+        <div class="table-wrapper table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th><h6 class="text-center">Tên tài khoản</h6></th>
+                <th><h6 class="text-center">Vai trò (Role)</h6></th>
+                <th><h6></h6></th>
+                <th><h6></h6></th>
+                <th><h6 class="text-center">Tác vụ</h6></th>
+            </tr>
+            <!-- end table row-->
+            </thead>
+            <tbody>
+            <tr>
+                @foreach (var user in Model.users)
                 {
-                    <a class="text-dark" asp-action="AddRole" asp-route-id="@user.Id">+ Thêm roles</a>
+                    <tr>
+                        <td class="min-width">
+                            <div class="lead">
+                                <div class="lead-text">
+                                    <p>@user.UserName</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            @if (string.IsNullOrEmpty(user.RoleNames))
+                            {
+                                
+                            }
+                            else
+                            {
+                                <p>@user.RoleNames</p>
+                            }
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td class="d-flex justify-content-center">
+                            <a class="main-btn mx-2 light-btn-outline rounded-md btn-hover" asp-action="SetPassword" asp-route-id="@user.Id">Đặt mật khẩu</a>
+                            <a class="main-btn success-btn-outline rounded-md btn-hover" asp-action="AddRole" asp-route-id="@user.Id">Thêm roles</a>
+                        </td>
+                    </tr>
                 }
-                else
-                {
-                    <a asp-action="AddRole" asp-route-id="@user.Id">@user.RoleNames</a>
-                }
-            </td>
-            <td>
-                <a class="btn btn-success btn-sm" asp-action="SetPassword" asp-route-id="@user.Id">Đặt mật khẩu</a>
-            </td>
-        </tr>
-    }
-</table>
-@{
-    var pagingmodel = new PagingModel()
-    {
-        currentpage = Model.currentPage,
-        countpages = Model.countPages,
-        generateUrl = (int? p) => Url.Action("Index", new { p = p})
-    };
-}
+                
+            </tr>
+            <!-- end table row -->
+            </tbody>
+        </table>
+        <!-- end table -->
+        </div>
+    </div>
+    <!-- end card -->
+    </div>
+    <!-- end col -->
+</div>
 
-<partial name="_PagingXTL" model="@pagingmodel" />
